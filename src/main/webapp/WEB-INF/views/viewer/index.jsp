@@ -130,6 +130,19 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="btn_event_wrap">
+                        <span class="btn_menu">
+                            <span class="icon"></span>
+                        </span>
+                        <ul class="list">
+                            <li class="find-map">
+                                <div class="li-header">
+                                    <span class="txt">이벤트 리스트</span>
+                                    <!-- <span class="close"></span> -->
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="search_wrap">
                         <div class="search">
                             <button class="btn_search btn-srch">

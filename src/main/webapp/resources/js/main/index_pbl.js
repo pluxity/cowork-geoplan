@@ -10,6 +10,7 @@ window.addEventListener('load', function(){
     let target; 
 
     let btnMapMenu = document.querySelector('.btn_map_wrap > .btn_menu');
+    let btnEventMenu = document.querySelector('.btn_event_wrap > .btn_menu');
     let submenuLi = document.querySelectorAll('.submenu-list > li');
 
     let searchInputList = document.querySelectorAll('.input_search__poi');
@@ -32,10 +33,10 @@ window.addEventListener('load', function(){
 
     //길찾기 버튼 클릭 시 
     btnMapMenu.addEventListener('click', menuMapClick);
-
+    btnEventMenu.addEventListener('click', eventMenuClick);
 
     // 메뉴 버튼 클릭 시 
-        btnMenu.addEventListener('click', menuClick);
+    btnMenu.addEventListener('click', menuClick);
     
     // 대메뉴 클릭 시
     for(li of listLi){
@@ -209,12 +210,15 @@ const findPathInit = () => {
 const menuClick = (e) => {
 
     let mapWrap = document.querySelector('.btn_map_wrap');
-    let menuWrap = document.querySelector('.btn_menu_wrap');  
+    let menuWrap = document.querySelector('.btn_menu_wrap');
+    let eventWrap = document.querySelector('.btn_event_wrap');
     let has = menuWrap.classList.contains('on');
 
-    if(mapWrap.classList.contains('on')){
+    if(mapWrap.classList.contains('on') || eventWrap.classList.contains('on')){
 
+        eventWrap.classList.remove('on')
         mapWrap.classList.remove('on');
+
         menuWrap.classList.add('on'); 
         findPathInit();
         document.querySelector('BUTTON.btn_reset').dispatchEvent(new Event('click'));
@@ -228,21 +232,13 @@ const menuClick = (e) => {
             //     }
             // });
         }
-    }
-
-    else if(!has){
+    } else if(!has) {
         menuWrap.classList.add('on');   
 
-    }  else{
+    } else {
         menuWrap.classList.remove('on');   
 
     }
-
-
-
-    
-
-    
 
 }
 
@@ -284,19 +280,18 @@ const menu2Click = (e) => {
 const menuMapClick = () => {
     
     let mapWrap = document.querySelector('.btn_map_wrap');
-    let menuWrap = document.querySelector('.btn_menu_wrap');  
+    let menuWrap = document.querySelector('.btn_menu_wrap');
+    let eventWrap = document.querySelector('.btn_event_wrap');
+
     let has = mapWrap.classList.contains('on');
 
-    if(menuWrap.classList.contains('on')){
-
+    if(menuWrap.classList.contains('on') || eventWrap.classList.contains('on')){
         menuWrap.classList.remove('on');
-        mapWrap.classList.add('on'); 
-    }
-
-    else if(!has){
-        mapWrap.classList.add('on');   
-
-    }  else{
+        eventWrap.classList.remove('on');
+        mapWrap.classList.add('on');
+    } else if(!has) {
+        mapWrap.classList.add('on');
+    } else {
         mapWrap.classList.remove('on');  
         findPathInit();
         document.querySelector('BUTTON.btn_reset').dispatchEvent(new Event('click'));
@@ -311,10 +306,25 @@ const menuMapClick = () => {
             // });
         }
     }
+}
 
+const eventMenuClick = () => {
 
+    let mapWrap = document.querySelector('.btn_map_wrap');
+    let menuWrap = document.querySelector('.btn_menu_wrap');
+    let eventWrap = document.querySelector('.btn_event_wrap');
 
+    let has = eventWrap.classList.contains('on');
 
+    if(menuWrap.classList.contains('on') || mapWrap.classList.contains('on')){
+        menuWrap.classList.remove('on');
+        mapWrap.classList.remove('on');
+        eventWrap.classList.add('on');
+    } else if(!has) {
+        eventWrap.classList.add('on');
+    } else {
+        eventWrap.classList.remove('on');
+    }
 }
 
 // const pinClick = (e) => {
