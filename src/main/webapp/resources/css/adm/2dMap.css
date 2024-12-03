@@ -1,0 +1,98 @@
+:root {
+    --primary-color: #3C55A5;
+    --secondary-color: #3C5CFF;
+    --text-color: #4D5F83;
+    --icon-color: #B3BFDB;
+    --border-color: #E4E7F1;
+    --background1-color: #F2F6FF;
+    --background2-color: #F8F8F8;
+}
+
+.searchArea {
+    z-index: 999;
+    position: absolute;
+    top: 50px;
+    right: 32px;
+    box-shadow: 1px 2px 6px rgb(0 0 0 / 16%);
+    width: 324px;
+    height: 58px;
+}
+
+#search {
+    display: flex;
+    height: 100%;
+}
+
+#search > Button {
+    background-color: var(--primary-color);
+    width: 58px;
+    border: none;
+    outline: none;
+}
+
+#search > Button > span {
+    background: url('../../img/icon/map/search.png');
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+}
+
+#search > Input {
+    background: #FFFFFF;
+    border: 1px solid var(--primary-color);
+    box-sizing: border-box;
+    width: 266px;
+    font-size: 16px;
+    padding: 16px;
+}
+
+#search > Input::placeholder {
+    color: var(--icon-color);
+}
+
+#search > Input:focus {
+    background-color: var(--background1-color);
+    color: var(--text-color);
+}
+
+#searchList {
+    z-index: 999;
+    width: 265px;
+    box-shadow: 1px 2px 6px rgb(0 0 0 / 16%);
+    max-height: 232px;
+    overflow-y: auto;
+    position: relative;
+    left: 59px;
+}
+
+#searchList > div {
+    background-color: #FFFFFF;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    color: var(--text-color);
+    font-weight: 400;
+}
+
+#searchList > div:hover {
+    background-color: var(--background2-color);
+}
+
+#searchList::-webkit-scrollbar {
+    width: 4px;
+    background: transparent;
+
+}
+
+#searchList::-webkit-scrollbar-thumb  {
+    width: 4px;
+    background: var(--icon-color);
+    border-radius: 8px;
+}
+
+#searchList::-webkit-scrollbar-track {
+    width: 4px;
+    background: var(--border-color);
+    border-radius: 8px;
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <typeAliases>
+    	<typeAlias alias="mapCategoryVO" type="com.plx.app.admin.vo.MapCategoryVO"/>
+    	<typeAlias alias="mapInfoVO" type="com.plx.app.admin.vo.MapInfoVO"/>
+    	<typeAlias alias="mapHstVO" type="com.plx.app.admin.vo.MapHstVO"/>
+    	<typeAlias alias="floorInfoVO" type="com.plx.app.admin.vo.FloorInfoVO"/>
+    	<typeAlias alias="POIIconsetVO" type="com.plx.app.admin.vo.POIIconsetVO"/>
+    	<typeAlias alias="poiInfoVO" type="com.plx.app.admin.vo.POIInfoVO"/>
+    	<typeAlias alias="poiCategoryVO" type="com.plx.app.admin.vo.POICategoryVO"/>
+    	<typeAlias alias="poiLodInfoVO" type="com.plx.app.admin.vo.POILodInfoVO"/>
+    	<typeAlias alias="poiLodTypeVO" type="com.plx.app.admin.vo.POILodTypeVO"/>
+    	<typeAlias alias="fileInfoVO" type="com.plx.app.cmn.vo.FileInfoVO"/>
+
+		<typeAlias alias="noticeVO" type="com.plx.app.admin.vo.NoticeVO"/>
+
+    	<typeAlias alias="usrInfoVO" type="com.plx.app.admin.vo.UsrInfoVO"/>
+    	<typeAlias alias="usrgrpInfoVO" type="com.plx.app.admin.vo.UsrgrpInfoVO"/>
+    	<typeAlias alias="usrgrpMapVO" type="com.plx.app.admin.vo.UsrgrpMapVO"/>
+    	<typeAlias alias="usrgrpPoiVO" type="com.plx.app.admin.vo.UsrgrpPoiVO"/>
+    	<typeAlias alias="usrgrpMenuVO" type="com.plx.app.admin.vo.UsrgrpMenuVO"/>
+		<typeAlias alias="topologyInfoVO" type="com.plx.app.admin.vo.TopologyInfoVO"/>
+		<typeAlias alias="camPosVO" type="com.plx.app.admin.vo.CamPosVO"/>
+		<typeAlias alias="analyticsVO" type="com.plx.app.admin.vo.AnalyticsVO"/>
+
+		<typeAlias alias="systemInfoVO" type="com.plx.app.admin.vo.SystemInfoVO"/>
+		
+		<typeAlias alias="viewerPOIInfoVO" type="com.plx.app.viewer.vo.ViewerPOIInfoVO"/>
+
+	
+    </typeAliases>
+</configuration>

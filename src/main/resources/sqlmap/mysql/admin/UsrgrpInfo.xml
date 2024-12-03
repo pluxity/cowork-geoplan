@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.UsrgrpInfoMapper">
+
+	<!-- 사용자그룹 resultMap  -->
+	<resultMap type="com.plx.app.admin.vo.UsrgrpInfoVO" id="rUsrgrpInfoVO">
+		<id property="grpNo" 				column="grp_no" />
+		<result property="grpNm" 			column="grp_nm" />
+		<result property="grpType" 			column="grp_type" />
+		<result property="grpTypeNm" 		column="grp_type_nm" />
+		<result property="grpDesc" 			column="grp_desc" />
+		<result property="regUsr" 			column="reg_usr" />
+		<result property="regDt" 			column="reg_dt" />
+		<result property="updUsr" 			column="upd_usr" />
+		<result property="updDt" 			column="upd_dt" />
+	</resultMap>
+
+	<!-- 사용자그룹 도면권한 resultMap  -->
+	<resultMap type="com.plx.app.admin.vo.UsrgrpMapVO" id="rUsrgrpMapVO">
+		<id property="grpNo" 				column="grp_no" />
+		<result property="mapNo" 			column="map_no" />
+		<result property="mapNm" 			column="map_nm" />
+		<result property="regUsr" 			column="reg_usr" />
+		<result property="regDt" 			column="reg_dt" />
+	</resultMap>
+
+	<!-- 사용자그룹 POI권한 resultMap  -->
+	<resultMap type="com.plx.app.admin.vo.UsrgrpPoiVO" id="rUsrgrpPoiVO">
+		<id property="grpNo" 				column="grp_no" />
+		<result property="category1No" 		column="category1_no" />
+		<result property="category1Nm" 		column="category1_nm" />
+		<result property="roleType" 		column="role_type" />
+		<result property="regUsr" 			column="reg_usr" />
+		<result property="regDt" 			column="reg_dt" />
+	</resultMap>
+
+	<!-- 사용자그룹 메뉴권한 resultMap  -->
+	<resultMap type="com.plx.app.admin.vo.UsrgrpMenuVO" id="rUsrgrpMenuVO">
+		<id property="grpNo" 				column="grp_no" />
+		<result property="allowUrl" 		column="allow_url" />
+		<result property="regUsr" 			column="reg_usr" />
+		<result property="regDt" 			column="reg_dt" />
+	</resultMap>
+
+	<!-- 조회 조건 -->
+ 	<sql id="search">
+ 		<if test='grpNo != null and grpNo > 0'>AND grp_no = #{grpNo}</if>
+ 		<if test='grpNm != ""'>AND grp_nm = #{grpNm}</if>
+ 		<if test='grpType != ""'>AND grp_type = #{grpType}</if>
+		<if test='searchKeyword != ""' >
+			<if test='searchType == "name"'>AND grp_nm LIKE CONCAT('%',#{searchKeyword},'%')</if>
+		</if>
+	</sql>
+
+	<!-- 사용자그룹 목록 -->
+	<select id="selectUsrgrpInfoList" parameterType="usrgrpInfoVO" resultMap="rUsrgrpInfoVO">
+		SELECT
+			grp_no,
+			grp_nm,
+			grp_type,
+			CASE
+				WHEN grp_type = 'ROLE_ADMIN' THEN '관리자'
+				WHEN grp_type = 'ROLE_MANAGER' THEN '중간관리자'
+				WHEN grp_type = 'ROLE_API' THEN 'API'
+				ELSE '일반'
+			END AS grp_type_nm,
+			grp_desc,
+			reg_usr,
+			reg_dt,
+			upd_usr,
+			upd_dt
+		FROM tb_usrgrp_info
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+		ORDER BY 
+		<choose>
+			<when test="sortBy eq 'grp_nm' ">grp_nm</when>	
+			<when test="sortBy eq 'reg_dt' ">reg_dt</when>	
+			<otherwise>grp_no</otherwise>
+		</choose>
+		<choose>
+				<when test="sortType eq 'ASC' ">ASC</when>	
+				<otherwise>DESC</otherwise>
+		</choose> 
+		<if test='page > 0 and pageSize > 0'>
+		LIMIT #{pageSize} OFFSET #{offset}
+		</if>
+	</select>
+
+	<!-- 사용자그룹 목록수 -->
+	<select id="selectUsrgrpInfoTotal" parameterType="usrgrpInfoVO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM tb_usrgrp_info
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+	</select>
+
+	<!-- 사용자그룹 정보 -->
+	<select id="selectUsrgrpInfo" parameterType="usrgrpInfoVO" resultMap="rUsrgrpInfoVO">
+		SELECT
+			*
+		FROM tb_usrgrp_info
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+	</select>
+
+	<!-- 사용자그룹 등록 -->
+	<insert id="insertUsrgrpInfo" parameterType="usrgrpInfoVO">
+		INSERT INTO tb_usrgrp_info(
+			grp_nm,
+			grp_type,
+			grp_desc,
+			reg_usr,
+			upd_usr
+		) VALUES(
+			#{grpNm},
+			#{grpType},
+			#{grpDesc},
+			#{regUsr},
+			#{updUsr}
+		)
+	</insert>
+
+	<!-- 사용자그룹 정보 수정 -->
+	<update id="updateUsrgrpInfo" parameterType="usrgrpInfoVO">
+		UPDATE tb_usrgrp_info SET
+			<if test='grpNm != ""'>grp_nm = #{grpNm},</if>
+			<if test='grpType != ""'>grp_type = #{grpType},</if>
+			<if test='grpDesc != ""'>grp_desc = #{grpDesc},</if>
+			upd_usr = #{updUsr},
+			upd_dt = SYSDATE()
+		WHERE grp_no = #{grpNo}
+	</update>
+
+	<!-- 사용자그룹 삭제 -->
+	<delete id="deleteUsrgrpInfo" parameterType="usrgrpInfoVO">
+		DELETE FROM tb_usrgrp_info
+		WHERE
+		<choose>
+			<when test='grpNoList != null'>
+			grp_no IN
+			<foreach collection="grpNoList" item="item" index="index" open="(" close=")" separator=",">
+	       	#{item}
+	    	</foreach>
+			</when>
+			<otherwise>grp_no = #{grpNo}</otherwise>
+		</choose>
+	</delete>
+
+	<!-- 사용자그룹 도면 리스트 -->
+	<select id="selectUsrgrpMapList" parameterType="usrgrpMapVO" resultMap="rUsrgrpMapVO">
+		SELECT
+			ugm.*,
+			mi.map_nm
+		FROM tb_usrgrp_map ugm
+		JOIN tb_map_info mi ON ugm.map_no = mi.map_no
+		WHERE grp_no = #{grpNo}
+		ORDER BY ugm.map_no
+	</select>
+
+	<!-- 사용자그룹 도면 등록 -->
+	<insert id="insertUsrgrpMap" parameterType="usrgrpMapVO">
+		INSERT INTO tb_usrgrp_map(
+			grp_no,
+			map_no,
+			reg_usr
+		) VALUES
+		<foreach collection="usrgrpMapNoList" item="item" index="index" separator=",">
+		(
+			#{grpNo},
+			#{item},
+			#{regUsr}
+		)
+		</foreach>
+	</insert>
+
+	<!-- 사용자그룹 도면 삭제 -->
+	<delete id="deleteUsrgrpMap" parameterType="usrgrpMapVO">
+		DELETE
+		FROM tb_usrgrp_map
+		WHERE grp_no = #{grpNo}
+	</delete>
+
+	<!-- 사용자그룹 poi 리스트 -->
+	<select id="selectUsrgrpPoiList" parameterType="usrgrpPoiVO" resultMap="rUsrgrpPoiVO">
+		SELECT
+			ugp.*,
+			pc1.category1_nm
+		FROM tb_usrgrp_poi ugp
+		JOIN tb_poi_category1 pc1 ON ugp.category1_no = pc1.category1_no
+		WHERE grp_no = #{grpNo}
+		<if test='roleType != ""'>AND role_type = #{roleType}</if>
+	</select>
+
+	<!-- 사용자그룹 poi 등록 -->
+	<insert id="insertUsrgrpPoi" parameterType="usrgrpPoiVO">
+		INSERT INTO tb_usrgrp_poi(
+			grp_no,
+			category1_no,
+			role_type,
+			reg_usr
+		) VALUES
+		<foreach collection="category1NoList" item="item" index="index" separator=",">
+		(
+			#{grpNo},
+			#{item},
+			#{roleType},
+			#{regUsr}
+		)
+		</foreach>
+	</insert>
+
+	<!-- 사용자그룹 poi 삭제 -->
+	<delete id="deleteUsrgrpPoi" parameterType="usrgrpPoiVO">
+		DELETE
+		FROM tb_usrgrp_poi
+		WHERE grp_no = #{grpNo}
+	</delete>
+
+	<!-- 사용자그룹 메뉴 리스트 -->
+	<select id="selectUsrgrpMenuList" parameterType="usrgrpMenuVO" resultMap="rUsrgrpMenuVO">
+		SELECT
+			*
+		FROM tb_usrgrp_menu
+		WHERE grp_no = #{grpNo}
+	</select>
+
+	<!-- 사용자그룹 메뉴 등록 -->
+	<insert id="insertUsrgrpMenu" parameterType="usrgrpMenuVO">
+		INSERT INTO tb_usrgrp_menu(
+			grp_no,
+			allow_url,
+			reg_usr
+		) VALUES
+		<foreach collection="allowUrlList" item="item" index="index" separator=",">
+		(
+			#{grpNo},
+			#{item},
+			#{regUsr}
+		)
+		</foreach>
+	</insert>
+
+	<!-- 사용자그룹 메뉴 삭제 -->
+	<delete id="deleteUsrgrpMenu" parameterType="usrgrpMenuVO">
+		DELETE
+		FROM tb_usrgrp_menu
+		WHERE grp_no = #{grpNo}
+	</delete>
+
+
+</mapper>

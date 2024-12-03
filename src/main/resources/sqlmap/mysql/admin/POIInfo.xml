@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.POIInfoMapper">
+
+	<!-- poi정보 resultMap  -->
+	<resultMap type="com.plx.app.admin.vo.POIInfoVO" id="rPoiInfoVO">
+		<id property="poiNo" column="poi_no" />
+		<result property="poiNm" column="poi_nm" />
+		<result property="dvcCd" column="dvc_cd" />
+		<result property="mapNo" column="map_no" />
+		<result property="floorNo" column="floor_no" />
+		<result property="positionYn" column="position_yn" />
+		<result property="category1No" column="category1_no" />
+		<result property="category2No" column="category2_no" />
+		<result property="posX" column="pos_x" />
+		<result property="posY" column="pos_y" />
+		<result property="posZ" column="pos_z" />
+		<result property="fdirX" column="fdir_x" />
+		<result property="fdirY" column="fdir_y" />
+		<result property="rotX" column="rot_x" />
+		<result property="rotY" column="rot_y" />
+		<result property="rotZ" column="rot_z" />
+		<result property="sclX" column="scl_x" />
+		<result property="sclY" column="scl_y" />
+		<result property="sclZ" column="scl_z" />
+		<result property="poiStatus" column="poi_status" />
+		<result property="poiStatusNm" column="poi_status_nm" />
+		<result property="urlLink" column="url_link" />
+		<result property="etcDesc" column="etc_desc" />
+		<result property="regUsr" column="reg_usr" />
+		<result property="regDt" column="reg_dt" />
+		<result property="updUsr" column="upd_usr" />
+		<result property="updDt" column="upd_dt" />
+		<result property="mapNm" column="map_nm" />
+		<result property="imgFileNo" column="img_file_no" />
+		<result property="imgFileNm" column="img_file_nm" />
+		<!--<association property="mapInfo" resultMap="com.plx.app.admin.mapper.MapInfoMapper.rMapInfoVO" />-->
+		<association property="floorInfo" resultMap="com.plx.app.admin.mapper.FloorInfoMapper.rFloorInfoVO" />
+		<association property="poiCategory" resultMap="com.plx.app.admin.mapper.POICategoryMapper.rPOICategoryVO" />
+		<association property="poiIconset" resultMap="com.plx.app.admin.mapper.POIIconsetMapper.rPOIIconsetVO" />
+	</resultMap>
+
+	<!-- 조회 조건 -->
+	<sql id="search">
+		<if test='mapNo != null'>AND pi.map_no = #{mapNo}</if>
+		<if test='floorNo != null'>AND pi.floor_no = #{floorNo}</if>
+		<if test='floorGroup != null'>AND fi.floor_group = #{floorGroup}</if>
+		<if test='dvcCd != ""'>AND pi.dvc_cd = #{dvcCd}</if>
+		<if test='searchKeyword != ""'>
+			<choose>
+				<when test='searchType == "poiNm"'>AND poi_nm LIKE CONCAT('%',#{searchKeyword},'%')</when>
+				<otherwise>AND dvc_cd LIKE CONCAT('%',#{searchKeyword},'%')</otherwise>
+			</choose>
+		</if>
+		<if test='category2NoList != null'>
+			AND pi.category2_no IN
+			<foreach collection="category2NoList" item="item" index="index" open="(" close=")" separator=",">
+	       	#{item}
+	    	</foreach>
+		</if>
+		<if test='poiCategory != null'>
+			<if test='poiCategory.category1No != null'>
+				AND pi.category1_no = #{poiCategory.category1No}
+			</if>
+			<if test='poiCategory.category2No != null'>
+				AND pi.category2_no = #{poiCategory.category2No}
+			</if>
+		</if>
+		<if test='category1No != null'>AND pi.category1_no = #{category1No}</if>
+		<if test='category2No != null'>AND pi.category2_no = #{category2No}</if>
+		<if test='positionYn != ""'>AND pi.position_yn = #{positionYn}</if>
+	</sql>
+
+	<!-- POI 등록 -->
+	<insert id="insertPOIInfo" parameterType="poiInfoVO" useGeneratedKeys="true" keyProperty="poiNo">
+		INSERT INTO tb_poi_info(
+			poi_nm,
+			dvc_cd,
+			map_no,
+			floor_no,
+			position_yn,
+			category1_no,
+			category2_no,
+		<if test='posX != ""'>pos_x,</if>
+		<if test='posY != ""'>pos_y,</if>
+		<if test='posZ != ""'>pos_z,</if>
+		fdir_x,
+			fdir_y,
+			url_link,
+			etc_desc,
+			reg_usr,
+			upd_usr
+		<if test='imgFileNo > 0'>,img_file_no</if>
+		) VALUES(
+			#{poiNm},
+			#{dvcCd},
+			#{mapNo},
+			#{floorNo},
+		<choose>
+			<when test='(posX != "" and posX != null) and (posY != "" and posY != null) and (posZ != "" and posZ != null)'>'Y',</when>
+			<otherwise>'N',</otherwise>
+		</choose>
+		#{category1No},
+			#{category2No},
+		<if test='posX != ""'>#{posX},</if>
+		<if test='posY != ""'>#{posY},</if>
+		<if test='posZ != ""'>#{posZ},</if>
+		#{fdirX},
+			#{fdirY},
+			#{urlLink},
+			#{etcDesc},
+			#{regUsr},
+			#{updUsr}
+		<if test='imgFileNo > 0'>,#{imgFileNo}</if>
+		)
+		<selectKey resultType="int" keyProperty="poiNo" order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+	</insert>
+
+	<!-- POI 목록 -->
+	<select id="selectPOIInfoList" parameterType="poiInfoVO" resultMap="rPoiInfoVO">
+		SELECT
+			pi.*,
+			mi.map_nm,
+			fi.floor_nm,
+			fi.floor_group AS floor_group,
+			pc1.category1_nm,
+			pc2.category2_nm,
+			pc2.category_code,
+			pic.*,
+			concat(fi0.file_path, fi0.file_save_nm) AS iconset_2d_0_file_path,
+			concat(fi1.file_path, fi1.file_save_nm) AS iconset_2d_1_file_path,
+			concat(fi2.file_path, fi2.file_save_nm) AS iconset_2d_2_file_path,
+			concat(fi3.file_path, fi3.file_save_nm) AS iconset_2d_3_file_path,
+			concat(fi4.file_path, fi4.file_save_nm) AS iconset_2d_4_file_path
+		FROM tb_poi_info pi
+		JOIN tb_poi_category1 pc1 ON pi.category1_no = pc1.category1_no
+		JOIN tb_poi_category2 pc2 ON pc1.category1_no = pc2.category1_no AND pi.category2_no = pc2.category2_no
+		LEFT JOIN tb_map_info mi ON pi.map_no = mi.map_no
+		LEFT JOIN tb_floor_info fi ON pi.map_no = fi.map_no AND pi.floor_no = fi.floor_no AND mi.MAP_VER = fi.MAP_VER
+		JOIN tb_poi_iconset pic ON pic.iconset_no = pc2.iconset_no
+		LEFT JOIN tb_file_info fi0 ON fi0.file_no = pic.iconset_2d_0
+		LEFT JOIN tb_file_info fi1 ON fi1.file_no = pic.iconset_2d_1
+		LEFT JOIN tb_file_info fi2 ON fi2.file_no = pic.iconset_2d_2
+		LEFT JOIN tb_file_info fi3 ON fi3.file_no = pic.iconset_2d_3
+		LEFT JOIN tb_file_info fi4 ON fi4.file_no = pic.iconset_2d_4
+		<if test='grpNo != null and grpNo > 0'>
+		JOIN tb_usrgrp_map ugm ON mi.map_no = ugm.map_no AND ugm.grp_no = #{grpNo}
+		JOIN tb_usrgrp_poi ugp ON pc1.category1_no = ugp.category1_no AND ugp.grp_no = #{grpNo} AND ugp.role_type = '1'
+     	</if>
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+		ORDER BY
+		<choose>
+			<when test="sortBy eq 'poi_nm' ">poi_nm</when>
+			<when test="sortBy eq 'dvc_cd' ">dvc_cd</when>
+			<when test="sortBy eq 'map_nm' ">map_nm</when>
+			<when test="sortBy eq 'poi_no' ">poi_no</when>
+			<otherwise>poi_no</otherwise>
+		</choose>
+		<choose>
+			<when test="sortType eq 'ASC' ">ASC</when>
+			<otherwise>DESC</otherwise>
+		</choose>
+		<!-- 		 poi_no DESC -->
+		<if test='page > 0 and pageSize > 0'>
+		LIMIT #{pageSize} OFFSET #{offset}
+		</if>
+	</select>
+
+	<!-- POI 목록 수 -->
+	<select id="selectPOIInfoTotal" parameterType="poiInfoVO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM tb_poi_info pi
+		JOIN tb_poi_category1 pc1 ON pi.category1_no = pc1.category1_no
+		JOIN tb_poi_category2 pc2 ON pc1.category1_no = pc2.category1_no AND pi.category2_no = pc2.category2_no
+		LEFT JOIN tb_map_info mi ON pi.map_no = mi.map_no
+		LEFT JOIN tb_floor_info fi ON pi.map_no = fi.map_no AND pi.floor_no = fi.floor_no AND mi.MAP_VER = fi.MAP_VER
+		JOIN tb_poi_iconset pic ON pic.iconset_no = pc2.iconset_no
+		<if test='grpNo != null and grpNo > 0'>
+		JOIN tb_usrgrp_map ugm ON mi.map_no = ugm.map_no AND ugm.grp_no = #{grpNo}
+     	</if>
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+	</select>
+
+	<!-- POI 정보 -->
+	<select id="selectPOIInfo" parameterType="poiInfoVO" resultMap="rPoiInfoVO">
+		SELECT
+			pi.*,
+			mi.map_nm,
+			fi.floor_nm,
+			fi.floor_group,
+			pc1.category1_nm,
+			pc2.category2_nm,
+			pc2.category_code,
+			pic.*,
+			concat(fi0.file_path, fi0.file_save_nm) AS iconset_2d_0_file_path,
+			concat(fi1.file_path, fi1.file_save_nm) AS iconset_2d_1_file_path,
+			concat(fi2.file_path, fi2.file_save_nm) AS iconset_2d_2_file_path,
+			concat(fi3.file_path, fi3.file_save_nm) AS iconset_2d_3_file_path,
+			concat(fi4.file_path, fi4.file_save_nm) AS iconset_2d_4_file_path,
+			concat(f.file_path, f.file_save_nm) AS img_file_nm,
+			f.file_real_nm AS img_file_real_nm
+		FROM tb_poi_info pi
+		LEFT JOIN tb_file_info f ON f.file_no = pi.img_file_no
+		JOIN tb_poi_category1 pc1 ON pi.category1_no = pc1.category1_no
+		JOIN tb_poi_category2 pc2 ON pc1.category1_no = pc2.category1_no AND pi.category2_no = pc2.category2_no
+		LEFT JOIN tb_map_info mi ON pi.map_no = mi.map_no
+		LEFT JOIN tb_floor_info fi ON pi.map_no = fi.map_no AND pi.floor_no = fi.floor_no AND mi.MAP_VER = fi.MAP_VER
+		JOIN tb_poi_iconset pic ON pic.iconset_no = pc2.iconset_no
+		LEFT JOIN tb_file_info fi0 ON fi0.file_no = pic.iconset_2d_0
+		LEFT JOIN tb_file_info fi1 ON fi1.file_no = pic.iconset_2d_1
+		LEFT JOIN tb_file_info fi2 ON fi2.file_no = pic.iconset_2d_2
+		LEFT JOIN tb_file_info fi3 ON fi3.file_no = pic.iconset_2d_3
+		LEFT JOIN tb_file_info fi4 ON fi4.file_no = pic.iconset_2d_4
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test='poiNo != null and poiNo > 0'>AND poi_no = #{poiNo}</if>
+			<if test='dvcCd != ""'>AND dvc_cd = #{dvcCd}</if>
+		</trim>
+	</select>
+
+	<!-- POI정보 수정 -->
+	<update id="updatePOIInfo" parameterType="poiInfoVO">
+		UPDATE tb_poi_info SET
+		<if test='poiNm != ""'>poi_nm = #{poiNm},</if>
+		<if test='dvcCd != ""'>dvc_cd = #{dvcCd},</if>
+		<if test='mapNo != null'>map_no = #{mapNo},</if>
+		<if test='floorNo != null'>floor_no = #{floorNo},</if>
+		<if test='positionYn != ""'>position_yn = #{positionYn},</if>
+		<if test='category1No != null and category1No > 0'>category1_no = #{category1No},</if>
+		<if test='category2No != null and category2No > 0'>category2_no = #{category2No},</if>
+		<if test='posX != ""'>pos_x = #{posX},</if>
+		<if test='posY != ""'>pos_y = #{posY},</if>
+		<if test='posZ != ""'>pos_z = #{posZ},</if>
+		<if test='fdirX != ""'>fdir_x = #{fdirX},</if>
+		<if test='fdirX != ""'>fdir_x = #{fdirX},</if>
+		<if test='rotX != ""'>rot_x = #{rotX},</if>
+		<if test='rotY != ""'>rot_y = #{rotY},</if>
+		<if test='rotZ != ""'>rot_z = #{rotZ},</if>
+		<if test='sclX != null and sclX > 0'>scl_x = #{sclX},</if>
+		<if test='sclY != null and sclY > 0'>scl_y = #{sclY},</if>
+		<if test='sclZ != null and sclZ > 0'>scl_z = #{sclZ},</if>
+		<if test='poiStatus != ""'>poi_status = #{poiStatus},</if>
+		<if test='urlLink != ""'>url_link = #{urlLink},</if>
+		<if test='etcDesc != ""'>etc_desc = #{etcDesc},</if>
+		upd_usr = #{updUsr},
+			upd_dt = SYSDATE()
+		<if test='imgFileNo > 0'>,img_file_no = #{imgFileNo}</if>
+		WHERE
+		<choose>
+			<when test='poiNoList != null'>
+				poi_no IN
+				<foreach collection="poiNoList" item="item" index="index" open="(" close=")" separator=",">
+		       	#{item}
+		    	</foreach>
+			</when>
+			<otherwise>poi_no = #{poiNo}</otherwise>
+		</choose>
+	</update>
+
+	<!-- POI 삭제 -->
+	<delete id="deletePOIInfo" parameterType="poiInfoVO">
+		DELETE FROM tb_poi_info
+		WHERE
+		<choose>
+			<when test='poiNoList != null'>
+				poi_no IN
+				<foreach collection="poiNoList" item="item" index="index" open="(" close=")" separator=",">
+	       	#{item}
+	    	</foreach>
+			</when>
+			<when test='mapNo != null and mapNo > 0'>map_no = #{mapNo}</when>
+			<otherwise>poi_no = #{poiNo}</otherwise>
+		</choose>
+	</delete>
+
+	<!-- 	POI 이미지 파일 삭제처리 업데이트 -->
+	<update id="updatePOIImgDelete" parameterType="poiInfoVO">
+		UPDATE tb_poi_info SET
+			img_file_no = 0
+		WHERE poi_no = #{poiNo}
+	</update>
+</mapper>

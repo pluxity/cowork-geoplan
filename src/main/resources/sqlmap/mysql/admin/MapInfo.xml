@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.MapInfoMapper">
+
+	<!-- 도면정보 resultMap  -->
+	<resultMap type="com.plx.app.admin.vo.MapInfoVO" id="rMapInfoVO">
+		<id property="mapNo" 			column="map_no" />
+		<result property="mapNm" 		column="map_nm" />
+		<result property="mapStts" 		column="map_stts" />
+		<result property="mapDesc" 		column="map_desc" />
+		<result property="imgFileNo" 	column="img_file_no" />
+		<result property="imgFileNm" 	column="img_file_nm" />
+		<result property="mapVer" 		column="map_ver" />
+		<result property="fileType" 	column="file_type" />
+		<result property="defaultFloor" column="default_floor" />
+		<result property="category1No" 	column="category1_no" />
+		<result property="category2No" 	column="category2_no" />
+		<result property="category3No" 	column="category3_no" />
+		<result property="camPosJson" 		column="cam_pos_json" />
+		<result property="centerPosJson" 		column="center_pos_json" />
+		<result property="lat" column="lat" />
+		<result property="lng" column="lng" />
+		<result property="mapCd" 		column="map_cd" />
+		<result property="regUsr" 		column="reg_usr" />
+		<result property="regDt" 		column="reg_dt" />
+		<result property="updUsr" 		column="upd_usr" />
+		<result property="updDt" 		column="upd_dt" />
+		<collection property="mapCategory" resultMap="com.plx.app.admin.mapper.MapCategoryMapper.rMapCategoryVO" />
+	</resultMap>
+
+	<!-- 도면이력 resultMap  -->
+	<resultMap type="com.plx.app.admin.vo.MapHstVO" id="rMapHstVO">
+		<id property="mapNo" 			column="map_no" />
+		<result property="mapVer" 		column="map_ver" />
+		<result property="hstDesc" 		column="hst_desc" />
+		<result property="mapFileNo" 	column="map_file_no" />
+		<result property="mapFileNm" 	column="map_file_nm" />
+		<result property="regUsr" 		column="reg_usr" />
+		<result property="regDt" 		column="reg_dt" />
+	</resultMap>
+
+	<!-- 조회 조건 -->
+ 	<sql id="search">
+		<if test='mapNm != ""'>AND map_nm LIKE CONCAT('%',#{mapNm},'%')</if>
+ 		<if test='category3NoList != null'>
+ 		AND category3_no IN
+			<foreach collection="category3NoList" item="item" index="index" open="(" close=")" separator=",">
+	       	#{item}
+	    	</foreach>
+ 		</if>
+ 		<if test='category1No != null'>AND category1_no = #{category1No}</if>
+ 		<if test='category2No != null'>AND category2_no = #{category2No}</if>
+ 		<if test='category3No != null'>AND category3_no = #{category3No}</if>
+ 		<if test='mapCd != ""'>AND map_cd = #{mapCd}</if>
+ 		<!--
+ 		<if test='sdate != "" and edate != ""'>
+ 		<![CDATA[AND (sdate <= #{edate} AND edate >= #{sdate})]]>
+ 		</if>
+ 		-->
+	</sql>
+
+	<!-- 도면정보 등록 -->
+	<insert id="insertMapInfo" parameterType="mapInfoVO" useGeneratedKeys="true" keyProperty="mapNo">
+		INSERT INTO tb_map_info(
+			map_nm,
+			map_stts,
+			map_desc,
+			img_file_no,
+			map_ver,
+			file_type,
+			default_floor,
+			category1_no,
+			category2_no,
+			category3_no,
+			cam_pos_json,
+			center_pos_json,
+			lat,
+			lng,
+			map_cd,
+			reg_usr,
+			upd_usr
+		) VALUES(
+			#{mapNm},
+			#{mapStts},
+			#{mapDesc},
+			#{imgFileNo},
+			#{mapVer},
+			#{fileType},
+			#{defaultFloor},
+			#{category1No},
+			#{category2No},
+			#{category3No},
+			#{camPosJson},
+			#{centerPosJson},
+			#{lat},
+			#{lng},
+			#{mapCd},
+			#{regUsr},
+			#{updUsr}
+		)
+		<selectKey resultType="int" keyProperty="mapNo" order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+	</insert>
+
+	<!-- 도면정보 수정 -->
+	<update id="updateMapInfo" parameterType="mapInfoVO">
+		UPDATE tb_map_info SET
+			<if test='mapNm != ""'>map_nm = #{mapNm},</if>
+			<if test='mapStts != ""'>map_stts = #{mapStts},</if>
+			<if test='mapDesc != ""'>map_desc = #{mapDesc},</if>
+			<if test='imgFileNo != ""'>img_file_no = #{imgFileNo},</if>
+			<if test='mapVer != ""'>map_ver = #{mapVer},</if>
+			<if test='defaultFloor != null'>default_floor = #{defaultFloor},</if>
+			<if test='category1No != null and category1No > 0'>category1_no = #{category1No},</if>
+			<if test='category2No != null and category2No > 0'>category2_no = #{category2No},</if>
+			<if test='category3No != null and category3No > 0'>category3_no = #{category3No},</if>
+			<if test='camPosJson != ""'>cam_pos_json = #{camPosJson},</if>
+			<if test='centerPosJson != ""'>center_pos_json = #{centerPosJson},</if>
+			<if test='lat != ""'>lat = #{lat},</if>
+			<if test='lng != ""'>lng = #{lng},</if>
+			<if test='mapCd != ""'>map_cd = #{mapCd},</if>
+			upd_usr = #{updUsr},
+			upd_dt = SYSDATE()
+		WHERE map_no = #{mapNo}
+	</update>
+
+	<!-- 도면 목록 -->
+	<select id="selectMapInfoList" parameterType="mapInfoVO" resultMap="rMapInfoVO">
+		SELECT
+			mi.*,
+			fi.file_save_nm AS img_file_nm
+		FROM tb_map_info mi
+		LEFT JOIN tb_file_info fi ON mi.img_file_no = fi.file_no
+		<if test='grpNo != null and grpNo > 0'>
+		JOIN tb_usrgrp_map ugm ON mi.map_no = ugm.map_no AND ugm.grp_no = #{grpNo}
+     	</if>
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+		ORDER BY map_no DESC
+		<if test='page > 0 and pageSize > 0'>
+		LIMIT #{pageSize} OFFSET #{offset}
+		</if>
+	</select>
+
+	<!-- 도면 목록 총 카운트 -->
+	<select id="selectMapInfoTotal" parameterType="mapInfoVO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM tb_map_info mi
+		<if test='grpNo != null and grpNo > 0'>
+		JOIN tb_usrgrp_map ugm ON mi.map_no = ugm.map_no AND ugm.grp_no = #{grpNo}
+     	</if>
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+	</select>
+
+	<!-- 도면 정보 -->
+	<select id="selectMapInfo" parameterType="mapInfoVO" resultMap="rMapInfoVO">
+		SELECT
+			mi.*,
+			fi.file_save_nm AS img_file_nm,
+			mc1.category1_nm,
+			mc2.category2_nm,
+			mc3.category3_nm
+		FROM tb_map_info mi
+		LEFT JOIN tb_file_info fi ON mi.img_file_no = fi.file_no
+		JOIN tb_map_category1 mc1 ON mc1.category1_no = mi.category1_no
+		JOIN tb_map_category2 mc2 ON mc2.category2_no = mi.category2_no
+		JOIN tb_map_category3 mc3 ON mc3.category3_no = mi.category3_no
+		WHERE
+			<choose>
+				<when test="mapNo != null and mapNo > 0">map_no = #{mapNo}</when>
+				<when test="mapCd != ''  ">map_cd LIKE #{mapCd}</when>
+			</choose>
+<!-- 			<if test='mapNo != null and mapNo > 0'>map_no = #{mapNo}</if> -->
+	</select>
+
+	<!-- 도면 삭제 -->
+	<delete id="deleteMapInfo" parameterType="mapInfoVO">
+		DELETE FROM tb_map_info
+		WHERE map_no = #{mapNo}
+	</delete>
+
+
+	<!-- 도면이력 등록 -->
+	<insert id="insertMapHst" parameterType="mapHstVO">
+		INSERT INTO tb_map_hst(
+			map_no,
+			map_ver,
+			hst_desc,
+			map_file_no,
+			reg_usr
+		) VALUES(
+			#{mapNo},
+			#{mapVer},
+			#{hstDesc},
+			#{mapFileNo},
+			#{regUsr}
+		)
+	</insert>
+
+	<!-- 도면 이력 리스트 -->
+	<select id="selectMapHstList" parameterType="mapHstVO" resultMap="rMapHstVO">
+		SELECT
+			mh.*,
+			fi.file_real_nm AS map_file_nm
+		FROM tb_map_hst mh
+		JOIN tb_file_info fi ON mh.map_file_no = fi.file_no
+		WHERE map_no = #{mapNo}
+		ORDER BY map_ver DESC
+	</select>
+
+	<!-- 도면 이력 정보 -->
+	<select id="selectMapHst" parameterType="mapHstVO" resultMap="rMapHstVO">
+		SELECT
+			mh.*,
+			fi.file_real_nm AS map_file_nm
+		FROM tb_map_hst mh
+		JOIN tb_file_info fi ON mh.map_file_no = fi.file_no
+		WHERE map_no = #{mapNo} AND map_ver = #{mapVer}
+	</select>
+
+	<!-- 도면 이력 삭제  -->
+	<delete id="deleteMapHst" parameterType="mapHstVO">
+		DELETE FROM tb_map_hst
+		WHERE map_no = #{mapNo} AND map_ver = #{mapVer}
+	</delete>
+
+</mapper>

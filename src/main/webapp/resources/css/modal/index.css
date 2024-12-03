@@ -1,0 +1,97 @@
+.modal-wrapper {
+    position: fixed;
+    top:0; left:0;
+    width:100vw;
+    height:100vh;
+    backdrop-filter: blur(10px);
+}
+.modal {
+    position:fixed;
+    top:50%;
+    left:50%;
+    padding:16px;
+    background:#ffffff;
+    border-radius: 16px;
+    box-shadow: 0px 12px 120px rgba(46, 46, 44, 0.2);
+    transform:translate(-50% , -50%);
+    -webkit-transform:translate(-50% , -50%);
+    font-size:1vh;
+}
+.modal .icon-wrap {
+    position:relative;
+    width:100%;
+    height:0;
+    padding-top:40%;
+}
+.modal .icon-wrap .icon {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background: linear-gradient(0deg, #FEF7F6, #FEF7F6); 
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);   
+    border-radius: 8px;
+}
+.modal .icon-wrap .icon:before {
+    content:'';
+    display:block;
+    width:100%;
+    height:100%;
+    background: url('/resources/img/icon/btnicon/alert.png')  center no-repeat;
+    background-size:8em;
+}
+.modal .modal-txt {
+    margin:1.6vh 0;
+    padding:1.6vh 2.4vh;
+    min-height:9.1vh;
+    line-height:2.7em;
+    max-width: 368px;
+    min-width:200px;
+}
+.modal .modal-txt .txt1 {
+    color: #1D1D1B;
+    font-size: 1.8em;
+    font-weight:bold;
+
+    font-family: 'NotoSansCJKkr-Regular',sans-serif;
+}
+.modal .modal-txt .txt2 {
+    font-size: 1.6em;
+    font-family: 'NotoSansCJKkr-Regular',sans-serif;
+}
+.modal .btn_ok {
+    position:relative;
+    width:100%;
+    height:0;
+    padding-top:15%;
+    border:none;
+    font-size:1vh;
+    cursor:pointer;
+}
+.modal .btn_ok .txt {
+    display:flex;
+    align-items:center;
+    justify-content: center;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background: linear-gradient(0deg, #3C55A5, #3C55A5), #4E558E;
+    box-shadow: 5px 5px 33px rgba(108, 107, 113, 0.06);    
+    font-size: 1.8em;
+    color: #FFFFFF;
+    font-family: 'NotoSansCJKkr-Regular',sans-serif;
+}
+
+@media only screen and (max-height : 1500px) and (min-height : 1081px) {
+    .modal,.modal .btn_ok{
+        font-size:10px;
+    }
+}
+@media only screen and (max-height : 755px) and (min-height : 0px) {
+    .modal ,.modal .btn_ok{
+        font-size:7px;        
+    }
+}

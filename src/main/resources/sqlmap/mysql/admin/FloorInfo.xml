@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.FloorInfoMapper">
+
+	<!-- 층정보 resultMap  -->
+	<resultMap type="com.plx.app.admin.vo.FloorInfoVO" id="rFloorInfoVO">
+		<id property="mapNo" 			column="map_no" />
+		<id property="mapVer" 			column="map_ver" />
+		<id property="floorNo" 			column="floor_no" />
+		<result property="floorGroup" 	column="floor_group" />
+		<result property="floorBase" 	column="floor_base" />
+		<result property="floorId" 		column="floor_id" />
+		<result property="floorNm" 		column="floor_nm" />
+		<result property="floorFileNm" 	column="floor_file_nm" />
+		<result property="floorFileType" 	column="floor_file_type" />
+		<result property="floorLvl" 	column="floor_lvl" />
+		<result property="isMain" 		column="is_main" />
+		<result property="regUsr" 		column="reg_usr" />
+		<result property="regDt" 		column="reg_dt" />
+	</resultMap>
+
+	<insert id="insertFloorInfo" parameterType="floorInfoVO">
+		INSERT INTO tb_floor_info(
+			map_no,
+			map_ver,
+			floor_group,
+			floor_no,
+			floor_base,
+			floor_id,
+			floor_nm,
+			floor_file_nm,
+			floor_file_type,
+			floor_lvl,
+			is_main,
+			reg_usr
+		) VALUES(
+			#{mapNo},
+			#{mapVer},
+			#{floorGroup},
+			#{floorNo},
+			#{floorBase},
+			#{floorId},
+			#{floorNm},
+			#{floorFileNm},
+			#{floorFileType},
+			#{floorLvl},
+			#{isMain},
+			#{regUsr}
+		)
+	</insert>
+
+	<update id="updateFloorInfo" parameterType="floorInfoVO">
+		UPDATE tb_floor_info
+		<trim prefix="SET" suffixOverrides=",">
+			<if test='floorBase != null and floorBase != 0'>floor_base = #{floorBase},</if>
+			<if test='floorId != ""'>floor_id = #{floorId},</if>
+			<if test='floorNm != ""'>floor_nm = #{floorNm},</if>
+			<if test='floorFileNm != ""'>floor_file_nm = #{floorFileNm},</if>
+			<if test='floorLvl != null and floorLvl > 0'>floor_lvl = #{floorLvl}</if>
+			<if test='isMain != ""'>is_main = #{isMain}</if>
+		</trim>
+		WHERE
+			map_no = #{mapNo}
+			AND map_ver = #{mapVer}
+			AND floor_no = #{floorNo}
+	</update>
+
+	<delete id="deleteFloorInfo" parameterType="floorInfoVO">
+		DELETE FROM tb_floor_info
+		WHERE
+			map_no = #{mapNo}
+			<if test='mapVer != ""'>AND map_ver = #{mapVer}</if>
+			<if test='floorNo != null'>AND floor_no = #{floorNo}</if>
+	</delete>
+
+	<select id="selectFloorInfoList" parameterType="floorInfoVO" resultMap="rFloorInfoVO">
+		SELECT
+			*
+		FROM tb_floor_info
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test='mapNo != null and mapNo > 0'>AND map_no = #{mapNo}</if>
+			<if test='mapVer != ""'>AND map_ver = #{mapVer}</if>
+			<if test='floorNo != null'>AND floor_no = #{floorNo}</if>
+			<if test='floorNm != ""'>AND floor_nm = #{floorNm}</if>
+			<if test='floorGroup != null'>AND floor_group = #{floorGroup}</if>
+			<if test='isMain != ""'>AND is_main = #{isMain}</if>
+		</trim>
+		ORDER BY map_no, floor_no
+	</select>
+
+	<select id="selectFloorInfo" parameterType="floorInfoVO" resultMap="rFloorInfoVO">
+		SELECT
+			*
+		FROM tb_floor_info
+		WHERE
+			(map_no = #{mapNo} AND map_ver = #{mapVer} AND floor_no = #{floorNo}) OR floor_id = #{floorId}
+	</select>
+
+</mapper>

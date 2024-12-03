@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.viewer.mapper.ViewerMapper">
+
+	<!-- poi정보 resultMap  -->
+	<resultMap type="com.plx.app.viewer.vo.ViewerPOIInfoVO" id="rViewerPOIInfoVO" extends="com.plx.app.admin.mapper.POIInfoMapper.rPoiInfoVO">
+		<result property="mapCd" column="map_cd" />
+	</resultMap>
+
+	<!-- 사용자그룹 도면권한 resultMap  -->
+	<resultMap type="com.plx.app.admin.vo.UsrgrpMapVO" id="rUsrgrpMapVO">
+		<id property="grpNo" 				column="grp_no" />
+		<result property="mapNo" 			column="map_no" />
+		<result property="mapNm" 			column="map_nm" />
+		<result property="regUsr" 			column="reg_usr" />
+		<result property="regDt" 			column="reg_dt" />
+		<result property="category2No" 			column="category2_no" />
+		<result property="category2Nm" 			column="category2_nm" />
+		<result property="lat" 			column="lat" />
+		<result property="lng" 			column="lng" />
+	</resultMap>
+
+	<!-- POI QUERY -->
+	<sql id="poiDeviceSql">
+		SELECT
+			PI.poi_no
+			,PI.poi_nm
+			,PI.dvc_cd
+			,PI.map_no
+			,PI.floor_no
+			,PI.position_yn
+			,PI.category1_no
+			,PI.category2_no
+			,PI.pos_x
+			,PI.pos_y
+			,PI.pos_z
+			,PI.fdir_x
+			,PI.fdir_y
+			,PI.rot_x
+			,PI.rot_y
+			,PI.rot_z
+			,PI.scl_x
+			,PI.scl_y
+			,PI.scl_z
+			,PI.poi_status
+			,CASE
+				WHEN PI.poi_status = '0' THEN '정상'
+				WHEN PI.poi_status = '1' THEN '1등급'
+				WHEN PI.poi_status = '2' THEN '2등급'
+				WHEN PI.poi_status = '3' THEN '3등급'
+				WHEN PI.poi_status = '4' THEN '기타'
+			END AS poi_status_nm
+			,PI.img_file_no
+			,PI.url_link
+			,PI.etc_desc
+			,PI.reg_usr
+			,PI.reg_dt
+			,PI.upd_usr
+			,PI.upd_dt
+			,mi.map_nm
+			,mi.map_cd
+			,fi.*
+			,pc1.category1_nm
+			,pc2.category2_nm
+			,pc2.category_code
+			,pic.*
+			,concat(fi0.file_path, fi0.file_save_nm) AS iconset_2d_0_file_path
+			,concat(fi1.file_path, fi1.file_save_nm) AS iconset_2d_1_file_path
+			,concat(fi2.file_path, fi2.file_save_nm) AS iconset_2d_2_file_path
+			,concat(fi3.file_path, fi3.file_save_nm) AS iconset_2d_3_file_path
+			,concat(fi4.file_path, fi4.file_save_nm) AS iconset_2d_4_file_path
+		FROM
+			TB_POI_INFO PI
+			JOIN tb_poi_category1 pc1 ON pi.category1_no = pc1.category1_no
+			JOIN tb_poi_category2 pc2 ON pc1.category1_no = pc2.category1_no AND pi.category2_no = pc2.category2_no
+			LEFT JOIN tb_map_info mi ON pi.map_no = mi.map_no
+			LEFT JOIN tb_floor_info fi ON pi.map_no = fi.map_no AND pi.floor_no = fi.floor_no AND mi.MAP_VER = fi.MAP_VER
+			LEFT JOIN tb_poi_iconset pic ON pic.iconset_no = pc2.iconset_no
+			LEFT JOIN tb_file_info fi0 ON fi0.file_no = pic.iconset_2d_0
+			LEFT JOIN tb_file_info fi1 ON fi1.file_no = pic.iconset_2d_1
+			LEFT JOIN tb_file_info fi2 ON fi2.file_no = pic.iconset_2d_2
+			LEFT JOIN tb_file_info fi3 ON fi3.file_no = pic.iconset_2d_3
+			LEFT JOIN tb_file_info fi4 ON fi4.file_no = pic.iconset_2d_4
+			<if test='grpNo != null and grpNo > 0'>
+			JOIN tb_usrgrp_poi ugp ON pc1.category1_no = ugp.category1_no AND ugp.grp_no = #{grpNo} AND ugp.role_type = '1'
+     		</if>
+		<where>
+			<if test='poiNo != null and poiNo != ""'>AND PI.poi_no = #{poiNo}</if>
+			<if test='mapNo != null and mapNo != ""'>AND PI.map_no = #{mapNo}</if>
+			<if test='dvcCd != null and dvcCd != ""'>AND PI.dvc_cd = #{dvcCd}</if>
+			<if test='poiNm != null and poiNm != ""'>AND PI.poi_nm LIKE CONCAT('%',#{poiNm},'%')</if>
+			<if test='floorNo != null'>AND PI.floor_no = #{floorNo}</if>
+			<if test='positionYn != null and positionYn != ""'>AND PI.position_yn = #{positionYn}</if>
+			<if test='category1No != null'>AND PI.category1_no = #{category1No}</if>
+			<if test='category2No != null'>AND PI.category2_no = #{category2No}</if>
+			<if test='searchKeyword != ""' >
+			<choose>
+				<when test='searchType == "poiNm"'>AND poi_nm LIKE CONCAT('%',#{searchKeyword},'%')</when>
+				<otherwise>AND dvc_cd LIKE CONCAT('%',#{searchKeyword},'%')</otherwise>
+			</choose>
+		</if>
+		</where>
+		ORDER BY fi.floor_group desc
+	</sql>
+
+	<!-- poi정보 리스트 -->
+	<select id="selectPOIInfoList" parameterType="viewerPOIInfoVO" resultMap="rViewerPOIInfoVO">
+		<include refid="poiDeviceSql" />
+	</select>
+
+	<!-- poi정보 단일건-->
+	<select id="selectPOIInfo" parameterType="viewerPOIInfoVO" resultMap="rViewerPOIInfoVO">
+		<include refid="poiDeviceSql" />
+	</select>
+
+	<select id="selectMapList" parameterType="usrgrpMapVO" resultMap="rUsrgrpMapVO">
+		SELECT
+			ugm.*,
+			mi.map_nm,
+			mi.category2_no,
+			mc2.category2_nm,
+			mi.lat,
+			mi.lng
+		FROM
+			tb_usrgrp_map ugm,
+			tb_map_info mi,
+			tb_map_category2 mc2
+		WHERE
+			( mi.map_no = ugm.map_no AND mc2.category2_no = mi.category2_no )
+			<choose>
+				<when test="grpNo != null">
+				AND ( ugm.grp_no = #{grpNo} OR mi.map_stts = 1)
+				</when>
+		  		<otherwise>
+				AND mi.map_stts = 1
+				</otherwise>
+			</choose>
+		GROUP BY
+		    ugm.map_no
+		ORDER BY
+		    ugm.map_no
+	</select>
+</mapper>

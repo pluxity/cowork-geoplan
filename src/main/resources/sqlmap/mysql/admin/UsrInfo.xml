@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.UsrInfoMapper">
+
+	<!-- resultMap  -->
+	<resultMap type="com.plx.app.admin.vo.UsrInfoVO" id="rUsrInfoVO">
+		<id property="usrNo" 				column="usr_no" />
+		<result property="usrId" 			column="usr_id" />
+		<result property="usrPwd" 			column="usr_pwd" />
+		<result property="usrNm" 			column="usr_nm" />
+		<result property="grpNo" 			column="grp_no" />
+		<result property="usrStatus" 		column="usr_status" />
+		<result property="usrEmail" 		column="usr_email" />
+		<result property="usrTel" 			column="usr_tel" />
+		<result property="usrDept" 			column="usr_dept" />
+		<result property="lastLoginDt" 		column="last_login_dt" />
+		<result property="lastPwdChangeDt" 		column="last_pwd_change_dt" />		
+		<result property="regUsr" 			column="reg_usr" />
+		<result property="regDt" 			column="reg_dt" />
+		<result property="updUsr" 			column="upd_usr" />
+		<result property="updDt" 			column="upd_dt" />
+		<result property="grpNm" 			column="grp_nm" />
+		<result property="grpType" 			column="grp_type" />
+	</resultMap>
+	
+	<!-- 조회 조건 -->
+ 	<sql id="search">
+ 		<if test='usrNo != null and usrNo > 0'>AND ui.usr_no = #{usrNo}</if>
+ 		<if test='usrId != ""'>AND ui.usr_id = #{usrId}</if>
+ 		<if test='usrNm != ""'>AND ui.usr_nm = #{usrNm}</if>
+ 		<if test='grpNo != null and grpNo > 0'>AND ui.grp_no = #{grpNo}</if>
+ 		<if test='usrStatus != null'>AND ui.usr_status = #{usrStatus}</if>
+		<if test='searchKeyword != ""' >
+			<choose>
+				<when test='searchType == "id"'>AND ui.usr_id LIKE CONCAT('%',#{searchKeyword},'%')</when>
+				<when test='searchType == "name"'>AND ui.usr_nm LIKE CONCAT('%',#{searchKeyword},'%')</when>
+				<when test='searchType == "group"'>AND gi.grp_nm LIKE CONCAT('%',#{searchKeyword},'%')</when>
+				<otherwise>AND ui.usr_dept LIKE CONCAT('%',#{searchKeyword},'%')</otherwise>
+			</choose>
+		</if>
+	</sql>
+
+	<!-- 사용자 목록 -->
+	<select id="selectUsrInfoList" parameterType="usrInfoVO" resultMap="rUsrInfoVO">
+		SELECT
+			ui.*,
+			gi.grp_nm,
+			gi.grp_type
+		FROM tb_usr_info ui
+		JOIN tb_usrgrp_info gi ON ui.grp_no = gi.grp_no
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+		ORDER BY 
+		<choose>
+			<when test="sortBy eq 'usr_id' ">usr_id</when>	
+			<when test="sortBy eq 'usr_nm' ">usr_nm</when>	
+			<when test="sortBy eq 'grp_nm' ">grp_nm</when>	
+			<when test="sortBy eq 'last_login_dt' ">last_login_dt</when>	
+			<when test="sortBy eq 'reg_dt' ">ui.reg_dt</when>	
+			<otherwise>usr_no</otherwise>
+		</choose>
+		<choose>
+				<when test="sortType eq 'ASC' ">ASC</when>	
+				<otherwise>DESC</otherwise>
+		</choose>
+		<if test='page > 0 and pageSize > 0'>
+		LIMIT #{pageSize} OFFSET #{offset}
+		</if>
+	</select>
+
+	<!-- 사용자 목록수 -->
+	<select id="selectUsrInfoTotal" parameterType="usrInfoVO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM tb_usr_info ui
+		JOIN tb_usrgrp_info gi ON ui.grp_no = gi.grp_no
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+	</select>
+
+	<!-- 사용자 정보 -->
+	<select id="selectUsrInfo" parameterType="usrInfoVO" resultMap="rUsrInfoVO">
+		SELECT
+			ui.*,
+			gi.grp_nm,
+			gi.grp_type
+		FROM tb_usr_info ui
+		JOIN tb_usrgrp_info gi ON ui.grp_no = gi.grp_no
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+	</select>
+
+	<!-- 사용자 등록 -->
+	<insert id="insertUsrInfo" parameterType="usrInfoVO">
+		INSERT INTO tb_usr_info(
+			usr_id,
+			usr_pwd,
+			usr_nm,
+			grp_no,
+			usr_email,
+			usr_tel,
+			usr_dept,
+			reg_usr,
+			upd_usr
+		) VALUES(
+			#{usrId},
+			#{usrPwd},
+			#{usrNm},
+			#{grpNo},
+			#{usrEmail},
+			#{usrTel},
+			#{usrDept},
+			#{regUsr},
+			#{updUsr}
+		)
+	</insert>
+
+	<!-- 사용자 정보 수정 -->
+	<update id="updateUsrInfo" parameterType="usrInfoVO">
+		UPDATE tb_usr_info SET
+			<if test='usrPwd != ""'>usr_pwd = #{usrPwd},</if>
+			<if test='usrNm != ""'>usr_nm = #{usrNm},</if>
+			<if test='grpNo != null and grpNo > 0'>grp_no = #{grpNo},</if>
+			<if test='usrStatus != null'>usr_status = #{usrStatus},</if>
+			<if test='usrEmail != ""'>usr_email = #{usrEmail},</if>
+			<if test='usrTel != ""'>usr_tel = #{usrTel},</if>
+			<if test='usrDept != ""'>usr_dept = #{usrDept},</if>
+			<if test='lastLoginDt != ""'>last_login_dt = #{lastLoginDt},</if>
+			<if test='lastPwdChangeDt != ""'>last_pwd_change_dt = #{lastPwdChangeDt},</if>			
+			<if test='updUsr != ""'>upd_usr = #{updUsr},</if>
+			upd_dt = SYSDATE()
+		WHERE
+			<choose>
+				<when test='usrId != ""'>usr_id = #{usrId}</when>
+				<otherwise>usr_no = #{usrNo}</otherwise>
+			</choose>
+	</update>
+
+	<!-- 사용자 삭제 -->
+	<delete id="deleteUsrInfo" parameterType="usrInfoVO">
+		DELETE FROM tb_usr_info
+		WHERE
+		<choose>
+			<when test='usrNoList != null'>
+			usr_no IN
+			<foreach collection="usrNoList" item="item" index="index" open="(" close=")" separator=",">
+	       	#{item}
+	    	</foreach>
+			</when>
+			<otherwise>usr_no = #{usrNo}</otherwise>
+		</choose>
+	</delete>
+
+</mapper>

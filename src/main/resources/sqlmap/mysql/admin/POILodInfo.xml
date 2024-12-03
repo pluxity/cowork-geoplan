@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.POILodInfoMapper">
+
+	<!-- POI Lod resultMap  -->
+	<resultMap type="com.plx.app.admin.vo.POILodTypeVO" id="rPoiLodType">
+		<id property="mapNo" 			column="map_no" />
+		<id property="floorNo" 			column="floor_no" />
+		<result property="levelCnt" 	column="level_cnt" />
+		<result property="maxDist" 		column="max_dist" />
+		<result property="regUsr" 		column="reg_usr" />
+		<result property="regDt" 		column="reg_dt" />
+		<result property="updUsr" 		column="upd_usr" />
+		<result property="updDt" 		column="upd_dt" />
+	</resultMap>
+
+	<resultMap type="com.plx.app.admin.vo.POILodInfoVO" id="rPoiLodInfo">
+		<id property="mapNo" 			column="map_no" />
+		<id property="floorNo" 			column="floor_no" />
+		<id property="category1No"		column="category1_no" />
+		<id property="category2No"		column="category2_no" />
+		<result property="iconSize0"	column="icon_size_0" />
+		<result property="iconSize1"	column="icon_size_1" />
+		<result property="iconSize2"	column="icon_size_2" />
+		<result property="iconSize3"	column="icon_size_3" />
+		<result property="iconSize4"	column="icon_size_4" />
+		<result property="iconSize5"	column="icon_size_5" />
+		<result property="iconSize6"	column="icon_size_6" />
+		<result property="iconSize7"	column="icon_size_7" />
+		<result property="iconSize8"	column="icon_size_8" />
+		<result property="iconSize9"	column="icon_size_9" />
+		<result property="lodType0"		column="lod_type_0" />
+		<result property="lodType1"		column="lod_type_1" />
+		<result property="lodType2"		column="lod_type_2" />
+		<result property="lodType3"		column="lod_type_3" />
+		<result property="lodType4"		column="lod_type_4" />
+		<result property="lodType5"		column="lod_type_5" />
+		<result property="lodType6"		column="lod_type_6" />
+		<result property="lodType7"		column="lod_type_7" />
+		<result property="lodType8"		column="lod_type_8" />
+		<result property="lodType9"		column="lod_type_9" />
+		<result property="regUsr" 		column="reg_usr" />
+		<result property="regDt" 		column="reg_dt" />
+		<result property="updUsr" 		column="upd_usr" />
+		<result property="updDt" 		column="upd_dt" />
+	</resultMap>
+
+	<!-- poi lod 타입 등록 수정 -->
+	<insert id="insertPoiLodType" parameterType="poiLodTypeVO">
+		INSERT INTO tb_poi_lod_type(
+			map_no,
+			floor_no,
+			level_cnt,
+			max_dist,
+			reg_usr,
+			upd_usr
+		) VALUES(
+			#{mapNo},
+			#{floorNo},
+			#{levelCnt},
+			#{maxDist},
+			#{regUsr},
+			#{updUsr}
+		)
+		ON DUPLICATE KEY
+		UPDATE
+			<if test='levelCnt != ""'>level_cnt = #{levelCnt},</if>
+			<if test='maxDist != null and maxDist != ""'>max_dist = #{maxDist},</if>
+			upd_usr = #{updUsr},
+			upd_dt = SYSDATE()
+	</insert>
+
+	<!--
+	<update id="updatePoiLodType" parameterType="poiLodTypeVO">
+		UPDATE tb_poi_lod_type
+		<trim prefix="SET" suffixOverrides=",">
+			<if test='levelCnt != ""'>level_cnt = #{levelCnt},</if>
+			<if test='maxDist != null and maxDist != ""'>max_dist = #{maxDist},</if>
+			upd_usr = #{updUsr},
+			upd_dt = SYSDATE()
+		</trim>
+		WHERE
+			map_no = #{mapNo}
+			<if test='floorNo != null'>AND floor_no = #{floorNo}</if>
+	</update>
+	-->
+
+	<!-- poi lod 타입 삭제 -->
+	<delete id="deletePoiLodType" parameterType="poiLodTypeVO">
+		DELETE FROM tb_poi_lod_type
+		WHERE
+			map_no = #{mapNo}
+			<if test='floorNo != null'>AND floor_no = #{floorNo}</if>
+	</delete>
+
+	<!-- poi lod 타입 정보 -->
+	<select id="selectPoiLodType" parameterType="poiLodTypeVO" resultMap="rPoiLodType">
+		SELECT
+			*
+		FROM tb_poi_lod_type
+		WHERE
+			map_no = #{mapNo}
+			<if test='floorNo != null'>AND floor_no = #{floorNo}</if>
+	</select>
+
+	<!-- poi lod 등록 수정 -->
+	<insert id="insertPoiLodInfo" parameterType="poiLodInfoVO">
+		INSERT INTO tb_poi_lod_Info(
+			map_no,
+			floor_no,
+			category1_no,
+			category2_no,
+			icon_size_0,
+			icon_size_1,
+			icon_size_2,
+			icon_size_3,
+			icon_size_4,
+			icon_size_5,
+			icon_size_6,
+			icon_size_7,
+			icon_size_8,
+			icon_size_9,
+			lod_type_0,
+			lod_type_1,
+			lod_type_2,
+			lod_type_3,
+			lod_type_4,
+			lod_type_5,
+			lod_type_6,
+			lod_type_7,
+			lod_type_8,
+			lod_type_9,
+			reg_usr,
+			upd_usr
+		) VALUES(
+			#{mapNo},
+			#{floorNo},
+			#{category1No},
+			#{category2No},
+			#{iconSize0},
+			#{iconSize1},
+			#{iconSize2},
+			#{iconSize3},
+			#{iconSize4},
+			#{iconSize5},
+			#{iconSize6},
+			#{iconSize7},
+			#{iconSize8},
+			#{iconSize9},
+			#{lodType0},
+			#{lodType1},
+			#{lodType2},
+			#{lodType3},
+			#{lodType4},
+			#{lodType5},
+			#{lodType6},
+			#{lodType7},
+			#{lodType8},
+			#{lodType9},
+			#{regUsr},
+			#{updUsr}
+		)
+		ON DUPLICATE KEY
+		UPDATE
+			<if test='iconSize0 != null and iconSize0 > 0'>icon_size_0 = #{iconSize0},</if>
+			<if test='iconSize1 != null and iconSize1 > 0'>icon_size_1 = #{iconSize1},</if>
+			<if test='iconSize2 != null and iconSize2 > 0'>icon_size_2 = #{iconSize2},</if>
+			<if test='iconSize3 != null and iconSize3 > 0'>icon_size_3 = #{iconSize3},</if>
+			<if test='iconSize4 != null and iconSize4 > 0'>icon_size_4 = #{iconSize4},</if>
+			<if test='iconSize5 != null and iconSize5 > 0'>icon_size_5 = #{iconSize5},</if>
+			<if test='iconSize6 != null and iconSize6 > 0'>icon_size_6 = #{iconSize6},</if>
+			<if test='iconSize7 != null and iconSize7 > 0'>icon_size_7 = #{iconSize7},</if>
+			<if test='iconSize8 != null and iconSize8 > 0'>icon_size_8 = #{iconSize8},</if>
+			<if test='iconSize9 != null and iconSize9 > 0'>icon_size_9 = #{iconSize9},</if>
+			<if test='iconSize0 != null and iconSize0 > 0'>lod_type_0 = #{lodType0},</if>
+			<if test='iconSize1 != null and iconSize1 > 0'>lod_type_1 = #{lodType1},</if>
+			<if test='iconSize2 != null and iconSize2 > 0'>lod_type_2 = #{lodType2},</if>
+			<if test='iconSize3 != null and iconSize3 > 0'>lod_type_3 = #{lodType3},</if>
+			<if test='iconSize4 != null and iconSize4 > 0'>lod_type_4 = #{lodType4},</if>
+			<if test='iconSize5 != null and iconSize5 > 0'>lod_type_5 = #{lodType5},</if>
+			<if test='iconSize6 != null and iconSize6 > 0'>lod_type_6 = #{lodType6},</if>
+			<if test='iconSize7 != null and iconSize7 > 0'>lod_type_7 = #{lodType7},</if>
+			<if test='iconSize8 != null and iconSize8 > 0'>lod_type_8 = #{lodType8},</if>
+			<if test='iconSize9 != null and iconSize9 > 0'>lod_type_9 = #{lodType9},</if>
+			upd_usr = #{updUsr},
+			upd_dt = SYSDATE()
+	</insert>
+
+	<!--
+	<update id="updatePoiLodInfo" parameterType="poiLodInfoVO">
+		UPDATE tb_poi_lod_info
+		<trim prefix="SET" suffixOverrides=",">
+			<if test='category1No != null'>category1_no = #{category1No},</if>
+			<if test='category2No != null'>category2_no = #{category2No},</if>
+			<if test='iconSize0 != null and iconSize0 > 0'>icon_size_0 = #{iconSize0},</if>
+			<if test='iconSize1 != null and iconSize1 > 0'>icon_size_1 = #{iconSize1},</if>
+			<if test='iconSize2 != null and iconSize2 > 0'>icon_size_2 = #{iconSize2},</if>
+			<if test='iconSize3 != null and iconSize3 > 0'>icon_size_3 = #{iconSize3},</if>
+			<if test='iconSize4 != null and iconSize4 > 0'>icon_size_4 = #{iconSize4},</if>
+			<if test='iconSize5 != null and iconSize5 > 0'>icon_size_5 = #{iconSize5},</if>
+			<if test='iconSize6 != null and iconSize6 > 0'>icon_size_6 = #{iconSize6},</if>
+			<if test='iconSize7 != null and iconSize7 > 0'>icon_size_7 = #{iconSize7},</if>
+			<if test='iconSize8 != null and iconSize8 > 0'>icon_size_8 = #{iconSize8},</if>
+			<if test='iconSize9 != null and iconSize9 > 0'>icon_size_9 = #{iconSize9},</if>
+			<if test='iconSize0 != null and iconSize0 > 0'>lod_type_0 = #{lodType0},</if>
+			<if test='iconSize1 != null and iconSize1 > 0'>lod_type_1 = #{lodType1},</if>
+			<if test='iconSize2 != null and iconSize2 > 0'>lod_type_2 = #{lodType2},</if>
+			<if test='iconSize3 != null and iconSize3 > 0'>lod_type_3 = #{lodType3},</if>
+			<if test='iconSize4 != null and iconSize4 > 0'>lod_type_4 = #{lodType4},</if>
+			<if test='iconSize5 != null and iconSize5 > 0'>lod_type_5 = #{lodType5},</if>
+			<if test='iconSize6 != null and iconSize6 > 0'>lod_type_6 = #{lodType6},</if>
+			<if test='iconSize7 != null and iconSize7 > 0'>lod_type_7 = #{lodType7},</if>
+			<if test='iconSize8 != null and iconSize8 > 0'>lod_type_8 = #{lodType8},</if>
+			<if test='iconSize9 != null and iconSize9 > 0'>lod_type_9 = #{lodType9},</if>
+			upd_usr = #{updUsr},
+			upd_dt = SYSDATE()
+		</trim>
+		WHERE
+			map_no = #{mapNo}
+			<if test='floorNo != null'>AND floor_no = #{floorNo}</if>
+	</update>
+	-->
+
+	<select id="selectPoiLodInfoList" parameterType="poiLodInfoVO" resultMap="rPoiLodInfo">
+		SELECT
+			*
+		FROM tb_poi_lod_info
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test='mapNo != null and mapNo > 0'>map_no = #{mapNo}</if>
+			<if test='floorNo != null'>AND floor_no = #{floorNo}</if>
+			<if test='category1No != null'>AND category1_no = #{category1No}</if>
+			<if test='category2No != null'>AND category2_no = #{category2No}</if>
+		</trim>
+	</select>
+
+</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Soft Foundation//DTD Tiles Configuration 3.0//EN"
+	"classpath:/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<!-- admin page layout template -->
+	<definition name="admin-layout" template="/admLayout/admLayout.jsp">
+		<put-attribute name="admSide" value="/admLayout/admSide.jsp" />
+		<put-attribute name="admTop" value="/admLayout/admTop.jsp" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="admFooter" value="/admLayout/admFooter.jsp" />
+	</definition>
+
+	<!-- front popup page layout template -->
+	<definition name="popup-layout" template="/admLayout/popupLayout.jsp">
+		<put-attribute name="header" value="/admLayout/header.jsp" />
+		<put-attribute name="content" value="" />
+	</definition>
+
+	<!-- admin viewer layout template -->
+	<definition name="admin-viewer-layout" template="/admLayout/admViewerLayout.jsp">
+		<put-attribute name="admSide" value="/admLayout/admSide.jsp" />
+		<put-attribute name="admTop" value="/admLayout/admTop.jsp" />
+		<put-attribute name="content" value="" />
+	</definition>
+
+	<definition name="empty-layout" template="/admLayout/empty.jsp">
+		<put-attribute name="content" value="" />
+	</definition>
+
+	<definition name="adm/*/*" extends="admin-layout">
+		<put-attribute name="content" value="/WEB-INF/views/adm/{1}/{2}.jsp" />
+	</definition>
+
+	<definition name="adm/map/viewer" extends="admin-viewer-layout">
+		<put-attribute name="content" value="/WEB-INF/views/adm/map/viewer.jsp" />
+	</definition>
+
+	<definition name="adm/patrol/index" extends="admin-viewer-layout">
+		<put-attribute name="content" value="/WEB-INF/views/adm/patrol/index.jsp" />
+	</definition>
+
+	<definition name="cmn/popup" extends="popup-layout">
+		<put-attribute name="content" value="/WEB-INF/views/cmn/popup.jsp" />
+	</definition>
+
+	<definition name="cmmn/error" extends="empty-layout">
+		<put-attribute name="content" value="/WEB-INF/views/cmmn/error.jsp" />
+	</definition>
+
+	<definition name="adm/map/2dMap" extends="empty-layout">
+		<put-attribute name="content" value="/WEB-INF/views/adm/map/2dMap.jsp" />
+	</definition>
+</tiles-definitions>

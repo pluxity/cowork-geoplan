@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.MapCategoryMapper">
+
+	<!-- 맵카테고리 -->
+	<resultMap type="com.plx.app.admin.vo.MapCategoryVO" id="rMapCategoryVO">
+		<result property="category1No" 	column="category1_no" />
+	 	<result property="category1Nm" 	column="category1_nm" />
+	 	<result property="category2No" 	column="category2_no" />
+	 	<result property="category2Nm" 	column="category2_nm" />
+	 	<result property="category3No" 	column="category3_no" />
+	 	<result property="category3Nm" 	column="category3_nm" />
+		<result property="regUsr" 		column="reg_usr" />
+		<result property="regDt" 		column="reg_dt" />
+		<result property="updUsr" 		column="upd_usr" />
+		<result property="updDt" 		column="upd_dt" />
+		<result property="orderNo" 		column="order_no" />
+	</resultMap>
+
+	<resultMap type="java.util.LinkedHashMap" id="rMapCategory1">
+		<id property="category1No"		column="category1_no"/>
+		<result property="category1Nm"	column="category1_nm" />
+		<collection property="categoryList" javaType="java.util.ArrayList" resultMap="rMapCategory2"/>
+	</resultMap>
+
+	<resultMap type="java.util.LinkedHashMap" id="rMapCategory2">
+		<id property="category2No"		column="category2_no"/>
+		<result property="category2Nm"	column="category2_nm" />
+		<collection property="categoryList" javaType="java.util.ArrayList" resultMap="rMapCategory3"/>
+	</resultMap>
+
+	<resultMap type="java.util.LinkedHashMap" id="rMapCategory3">
+		<id property="category3No"		column="category3_no"/>
+		<result property="category3Nm"	column="category3_nm" />
+		<collection property="categoryList" javaType="java.util.ArrayList" resultMap="rMapCategory4"/>
+	</resultMap>
+
+	<resultMap type="java.util.LinkedHashMap" id="rMapCategory4">
+		<id property="mapNo"			column="map_no"/>
+		<result property="mapNm"		column="map_nm" />
+	</resultMap>
+
+	<select id="selectMapCategoryList1" parameterType="mapCategoryVO" resultMap="rMapCategoryVO">
+		SELECT * FROM TB_MAP_CATEGORY1 ORDER BY ORDER_NO
+	</select>
+
+	<select id="selectMapCategoryList2" parameterType="mapCategoryVO" resultMap="rMapCategoryVO">
+		SELECT * FROM TB_MAP_CATEGORY2 
+		<if test="category1No != null">
+			WHERE CATEGORY1_NO = #{category1No} 
+		</if>		
+		ORDER BY ORDER_NO
+	</select>
+
+	<select id="selectMapCategoryList3" parameterType="mapCategoryVO" resultMap="rMapCategoryVO">
+		SELECT * FROM TB_MAP_CATEGORY3 
+		<if test="category2No != null">
+			WHERE CATEGORY2_NO = #{category2No} 
+		</if>		
+		ORDER BY ORDER_NO
+	</select>
+
+	<select id="selectMapCategory1" parameterType="mapCategoryVO" resultMap="rMapCategoryVO">
+		SELECT * FROM TB_MAP_CATEGORY1 WHERE CATEGORY1_NO = #{category1No} ORDER BY ORDER_NO
+	</select>
+
+	<select id="selectMapCategory2" parameterType="mapCategoryVO" resultMap="rMapCategoryVO">
+		SELECT MC2.*, MC1.CATEGORY1_NO, MC1.CATEGORY1_NM
+		FROM
+			TB_MAP_CATEGORY2 MC2
+			INNER JOIN TB_MAP_CATEGORY1 MC1 ON (MC1.CATEGORY1_NO = MC2.CATEGORY1_NO)
+		WHERE
+			MC2.CATEGORY2_NO = #{category2No}
+	</select>
+
+	<select id="selectMapCategory3" parameterType="mapCategoryVO" resultMap="rMapCategoryVO">
+		SELECT MC3.*, MC2.CATEGORY2_NM, MC1.CATEGORY1_NO, MC1.CATEGORY1_NM
+		FROM
+			TB_MAP_CATEGORY3 MC3
+			INNER JOIN TB_MAP_CATEGORY2 MC2 ON (MC2.CATEGORY2_NO = MC3.CATEGORY2_NO)
+			INNER JOIN TB_MAP_CATEGORY1 MC1 ON (MC1.CATEGORY1_NO = MC2.CATEGORY1_NO)
+		WHERE
+			MC3.CATEGORY3_NO = #{category3No}
+	</select>
+
+	<select id="validationMapCategory" parameterType="mapCategoryVO" resultType="Integer">
+		SELECT COUNT(*) FROM
+			TB_MAP_CATEGORY1 MC1
+			INNER JOIN TB_MAP_CATEGORY2 MC2 ON (MC1.CATEGORY1_NO = MC2.CATEGORY1_NO)
+			INNER JOIN TB_MAP_CATEGORY3 MC3 ON (MC2.CATEGORY2_NO = MC3.CATEGORY2_NO)
+			INNER JOIN TB_MAP_INFO MI ON (MC1.CATEGORY1_NO = MI.CATEGORY1_NO AND MC2.CATEGORY2_NO = MI.CATEGORY2_NO AND MC3.CATEGORY3_NO = MI.CATEGORY3_NO)
+		<where>
+			<if test="category1No != null">
+				MC1.CATEGORY1_NO = #{category1No}
+			</if>
+			<if test="category2No != null">
+				AND MC2.CATEGORY2_NO = #{category2No}
+			</if>
+			<if test="category3No != null">
+				AND MC3.CATEGORY3_NO = #{category3No}
+			</if>
+		</where>
+	</select>
+
+	<update id="updateMapCategory1" parameterType="mapCategoryVO">
+		UPDATE
+			TB_MAP_CATEGORY1
+		SET
+			CATEGORY1_NM = #{categoryNm}
+			<if test="updUsr != null">
+				,UPD_USR = #{updUsr}
+			</if>
+			,UPD_DT = sysdate()
+			<if test="orderNo != null">
+				,ORDER_NO = #{orderNo}
+			</if>
+		WHERE
+			CATEGORY1_NO = #{categoryNo}
+	</update>
+
+	<update id="updateMapCategory2" parameterType="mapCategoryVO">
+		UPDATE
+			TB_MAP_CATEGORY2
+		SET
+			CATEGORY2_NM = #{categoryNm}
+			<if test="updUsr != null">
+				,UPD_USR = #{updUsr}
+			</if>
+			,UPD_DT = sysdate()
+			<if test="orderNo != null">
+				,ORDER_NO = #{orderNo}
+			</if>
+		WHERE
+			CATEGORY2_NO = #{categoryNo}
+	</update>
+
+	<update id="updateMapCategory3" parameterType="mapCategoryVO">
+		UPDATE
+			TB_MAP_CATEGORY3
+		SET
+			CATEGORY3_NM = #{categoryNm}
+			<if test="updUsr != null">
+				,UPD_USR = #{updUsr}
+			</if>
+			,UPD_DT = sysdate()
+			<if test="orderNo != null">
+				,ORDER_NO = #{orderNo}
+			</if>
+		WHERE
+			CATEGORY3_NO = #{categoryNo}
+	</update>
+
+	<delete id="deleteMapCategory1" parameterType="mapCategoryVO">
+
+<!-- 		DELETE
+			FROM TB_MAP_CATEGORY3
+		WHERE
+			CATEGORY3_NO IN (
+				SELECT MC3.CATEGORY3_NO
+				FROM
+					TB_MAP_CATEGORY3 MC3
+					INNER JOIN TB_MAP_CATEGORY2 MC2 ON (MC2.CATEGORY2_NO = MC3.CATEGORY2_NO)
+					INNER JOIN TB_MAP_CATEGORY1 MC1 ON (MC1.CATEGORY1_NO = MC2.CATEGORY1_NO)
+				WHERE
+					MC1.CATEGORY1_NO = #{category1No}
+			);
+
+		DELETE
+			FROM TB_MAP_CATEGORY2
+		WHERE
+			CATEGORY1_NO = #{category1No};
+ -->
+		DELETE
+			FROM TB_MAP_CATEGORY1
+		WHERE
+			CATEGORY1_NO = #{category1No};
+
+	</delete>
+
+	<delete id="deleteMapCategory2" parameterType="mapCategoryVO">
+
+<!-- 		DELETE
+			FROM TB_MAP_CATEGORY3
+		WHERE
+			CATEGORY3_NO IN (
+				SELECT MC3.CATEGORY3_NO
+				FROM
+					TB_MAP_CATEGORY3 MC3
+					INNER JOIN TB_MAP_CATEGORY2 MC2 ON (MC2.CATEGORY2_NO = MC3.CATEGORY2_NO)
+				WHERE
+					MC2.CATEGORY2_NO = #{category2No}
+			); -->
+
+		DELETE
+			FROM TB_MAP_CATEGORY2
+		WHERE
+			CATEGORY2_NO = #{category2No};
+
+	</delete>
+
+	<delete id="deleteMapCategory3" parameterType="mapCategoryVO">
+		DELETE
+			FROM TB_MAP_CATEGORY3
+		WHERE
+			CATEGORY3_NO = #{category3No};
+	</delete>
+
+	<insert id="insertMapCategory1" parameterType="mapCategoryVO">
+		INSERT INTO TB_MAP_CATEGORY1
+			(CATEGORY1_NM, REG_USR, REG_DT, UPD_USR, UPD_DT, ORDER_NO)
+		VALUES(
+			#{categoryNm},
+			#{regUsr},
+			sysdate(),
+			#{updUsr},
+			sysdate(),
+			(SELECT IFNULL(MAX(ORDER_NO)+1,1) FROM TB_MAP_CATEGORY1 B)
+			)
+	</insert>
+
+	<insert id="insertMapCategory2" parameterType="mapCategoryVO">
+		INSERT INTO TB_MAP_CATEGORY2
+			(CATEGORY2_NM, CATEGORY1_NO, REG_USR, REG_DT, UPD_USR, UPD_DT, ORDER_NO)
+		VALUES(
+			#{categoryNm},
+			#{category1No},
+			#{regUsr},
+			sysdate(),
+			#{updUsr},
+			sysdate(),
+			(SELECT IFNULL(MAX(ORDER_NO)+1,1) FROM TB_MAP_CATEGORY2 B WHERE CATEGORY1_NO=#{category1No} )
+			)
+	</insert>
+
+	<insert id="insertMapCategory3" parameterType="mapCategoryVO">
+		INSERT INTO TB_MAP_CATEGORY3
+			(CATEGORY3_NM, CATEGORY2_NO, REG_USR, REG_DT, UPD_USR, UPD_DT, ORDER_NO)
+		VALUES(
+			#{categoryNm},
+			#{category2No},
+			#{regUsr},
+			sysdate(),
+			#{updUsr},
+			sysdate(),
+			(SELECT IFNULL(MAX(ORDER_NO)+1,1) FROM TB_MAP_CATEGORY3 B WHERE CATEGORY2_NO = #{category2No} )
+			)
+	</insert>
+
+	<update id="swapMapCategoryOrderNo1" parameterType="Integer">
+		UPDATE TB_MAP_CATEGORY1 A
+			<![CDATA[ INNER JOIN TB_MAP_CATEGORY1 B ON (A.CATEGORY1_NO  <>  B.CATEGORY1_NO) ]]>
+		SET A.ORDER_NO = B.ORDER_NO
+		WHERE
+			A.CATEGORY1_NO IN (#{arg1},#{arg0}) AND B.CATEGORY1_NO IN (#{arg1},#{arg0});
+	</update>
+	<update id="swapMapCategoryOrderNo2" parameterType="Integer">
+		UPDATE TB_MAP_CATEGORY2 A
+			<![CDATA[ INNER JOIN TB_MAP_CATEGORY2 B ON (A.CATEGORY2_NO  <>  B.CATEGORY2_NO) ]]>
+		SET A.ORDER_NO = B.ORDER_NO
+		WHERE
+			A.CATEGORY2_NO IN (#{arg1},#{arg0}) AND B.CATEGORY2_NO IN (#{arg1},#{arg0});
+	</update>
+	<update id="swapMapCategoryOrderNo3" parameterType="Integer">
+		UPDATE TB_MAP_CATEGORY3 A
+			<![CDATA[ INNER JOIN TB_MAP_CATEGORY3 B ON (A.CATEGORY3_NO  <>  B.CATEGORY3_NO) ]]>
+		SET A.ORDER_NO = B.ORDER_NO
+		WHERE
+			A.CATEGORY3_NO IN (#{arg1},#{arg0}) AND B.CATEGORY3_NO IN (#{arg1},#{arg0});
+	</update>
+
+	<select id="mapCategoryTree" resultMap="rMapCategory1">
+		SELECT
+			mc1.category1_no,
+			mc1.category1_nm,
+			mc2.category2_no,
+			mc2.category2_nm,
+			mc3.category3_no,
+			mc3.category3_nm,
+			mi.map_no,
+			mi.map_nm
+		FROM tb_map_category1 mc1
+		LEFT JOIN tb_map_category2 mc2 ON mc1.category1_no = mc2.category1_no
+		LEFT JOIN tb_map_category3 mc3 ON mc2.category2_no = mc3.category2_no
+		LEFT JOIN tb_map_info mi ON mi.category3_no = mc3.category3_no
+		ORDER BY mc1.order_no, mc2.order_no, mc3.order_no, mi.map_no
+	</select>
+
+</mapper>

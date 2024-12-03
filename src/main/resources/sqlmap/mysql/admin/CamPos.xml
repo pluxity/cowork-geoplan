@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.CamPosMapper">
+
+<resultMap type="com.plx.app.admin.vo.CamPosVO" id="rCamPosVO">
+    <id property="camPosNo" column="cam_pos_no"/>
+    <id property="mapNo" column="map_no"/>
+    <id property="floorNo" column="floor_no"/>
+    <result property="camPosJson" column="cam_pos_json"/>
+</resultMap>
+
+<select id="selectCamPosList" parameterType="camPosVO" resultMap="rCamPosVO">
+    SELECT *
+    FROM tb_cam_pos
+    WHERE map_no = #{mapNo}
+    ORDER BY floor_no
+</select>
+
+<select id="selectCamPosInfo" parameterType="camPosVO" resultMap="rCamPosVO">
+    SELECT *
+    FROM tb_cam_pos
+    WHERE map_no = #{mapNo} AND floor_no = #{floorNo}
+</select>
+
+<select id="selectCamPosTotal" parameterType="camPosVO" resultType="int">
+    SELECT COUNT(*)
+    FROM tb_cam_pos
+    WHERE map_no=#{mapNo} AND floor_no = #{floorNo}
+</select>
+
+<update id="updateCamPos" parameterType="camPosVO">
+    UPDATE tb_cam_pos
+    <set>
+        <if test="camPosJson != null and camPosJson != ''">cam_pos_json = #{camPosJson}</if>
+    </set>
+    WHERE map_no = #{mapNo} AND floor_no = #{floorNo}
+</update>
+
+<insert id="insertCamPos" parameterType="camPosVO">
+    INSERT INTO tb_cam_pos ( 
+        map_no, floor_no, cam_pos_json
+    ) VALUES ( 
+        #{mapNo}, #{floorNo}, #{camPosJson}
+    )
+</insert>
+</mapper>

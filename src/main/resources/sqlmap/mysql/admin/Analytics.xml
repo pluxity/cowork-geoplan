@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.AnalyticsMapper">
+<resultMap type="com.plx.app.admin.vo.AnalyticsVO" id="rAnalyticsVO">
+    <result property="analyticsNo" 		column="analytics_no" />
+	<result property="mapNo" 		column="map_no" />
+	<result property="regDt" 		column="reg_dt" />
+    <result property="mapNm"        column="map_nm" />
+    <result property="category3No"        column="category3_no" />
+</resultMap>
+
+<resultMap type="com.plx.app.admin.vo.MapCategoryVO" id="rMapCategoryVO">
+		<result property="category1No" 	column="category1_no" />
+	 	<result property="category1Nm" 	column="category1_nm" />
+	 	<result property="category2No" 	column="category2_no" />
+	 	<result property="category2Nm" 	column="category2_nm" />
+	 	<result property="category3No" 	column="category3_no" />
+	 	<result property="category3Nm" 	column="category3_nm" />
+		<result property="regUsr" 		column="reg_usr" />
+		<result property="regDt" 		column="reg_dt" />
+		<result property="updUsr" 		column="upd_usr" />
+		<result property="updDt" 		column="upd_dt" />
+		<result property="orderNo" 		column="order_no" />
+	</resultMap>
+
+<select id="selectAnalyticsInfoList" parameterType="analyticsVO" resultMap="rAnalyticsVO">
+    SELECT A.*, M.map_nm, M.category3_no
+    FROM tb_analytics A
+    INNER JOIN tb_map_info M ON (M.map_no = A.map_no)
+    <where>
+        <if test="sDate != null and eDate != null">
+            <![CDATA[AND A.reg_dt between #{sDate} AND #{eDate}]]>         
+        </if>
+        <if test="mapNo != null and mapNo > 0">
+            <![CDATA[AND M.map_no = #{mapNo}]]>         
+        </if>
+        <if test="category3No != null and category3No > 0">
+            <![CDATA[AND category3_no = #{category3No}]]>         
+        </if>
+    </where>
+    ORDER BY reg_dt;
+</select>
+
+<insert id="insertAnalyticsInfo" parameterType="analyticsVO">
+    INSERT INTO tb_analytics(
+        map_no,
+        reg_dt
+    ) VALUES (
+        #{mapNo},  
+        sysdate()
+    )
+</insert>
+
+<select id="selectMapCategoryList3" parameterType="mapCategoryVO" resultMap="rMapCategoryVO">
+		SELECT * FROM TB_MAP_CATEGORY3 	
+		ORDER BY CATEGORY3_NO
+	</select>
+</mapper>

@@ -1,0 +1,122 @@
+.container {
+    display:flex;
+    align-items:center;
+    justify-content: center;
+}
+.login-form {
+    font-size:1vh;
+    padding:7.2em 4em 4em;
+    width:57.2em;
+    height:66.9em;
+    max-width:572px;
+    max-height:669px;    
+    background: linear-gradient(0deg, #FFFFFF, #FFFFFF), rgba(39, 54, 123, 0.06);
+}
+.login-form h2 {    
+
+}
+.login-form h2 > img {    
+    max-width:100%;
+    object-fit: contain;
+}
+.login-form .login-tit {
+    margin-top:1.6em;
+    margin-bottom:4.8em;    
+    font-family: 'NotoSansCJKkr-Bold', sans-serif;
+    color: #1D1D1B;
+    line-height:4.3em;    
+}
+.login-form .login-tit > .txt {
+    font-size:3.6em;
+}
+.login-form .login-txt {
+    margin-bottom:2.4em;
+    line-height:5em;    
+    letter-spacing: 0.02em;
+    font-family: 'IBMPlexSansKR-Medium',sans-serif;
+    color: #1D1D1B;
+}
+.login-form .login-txt > .txt {
+    font-size: 3.6em;
+}
+.login-form .login-input {
+    display:flex;
+    flex-direction: column;    
+}
+.login-form .login-input > label {
+    font-family: 'NotoSansCJKkr-Regular',sans-serif;
+    font-size: 1.8em;
+    color: #2E2E2C;
+}
+.login-form .login-input .id {
+    width:100%;
+    height: 5.6em;
+    margin-top:1.6em;
+    background: linear-gradient(0deg, #FFFFFF, #FFFFFF), #F2F2F2;
+}
+.login-form .login-input .id {
+    margin-bottom:2.4em;
+}
+
+.login-form .login-input > input::placeholder {
+    color: #BBBBBB;
+}
+.login-form .login-input > input {
+    width:100%;
+    height:6.5rem;
+    margin:1.5rem 0rem;
+    padding-left:3.2em;
+    padding-right:20px;
+    font-size:1.6em;
+    border-radius: 4px;
+    color: #1D1D1B;  
+    background-size:20px;
+    border: 2px solid transparent;
+    transition:all 0.3s ease-in-out; 
+    -webkit-transition:all 0.3s ease-in-out; 
+}
+.login-form .login-input.id > input {
+    background: url('../../img/icon/id/inactive.png') 1.4em center no-repeat #f2f2f2;
+    background-size:1.4em;
+}
+.login-form .login-input.pw > input {
+    background: url('../../img/icon/lock/inactive.png') 1.4em center no-repeat #f2f2f2;
+    background-size:1.4em;
+}
+/* focus 일때 */
+.login-form .login-input.id div > input:focus {
+    background: url('../../img/icon/id/active.png') 1.4em center no-repeat #ffffff;
+    background-size:1.4em;
+}
+.login-form .login-input.pw div > input:focus {
+    background: url('../../img/icon/lock/active.png') 1.4em center no-repeat #ffffff;
+    background-size:1.4em;
+}
+.login-form .login-input > input:focus {
+    border:2px solid #3C55A5;
+}
+
+.login-form .btn-wrap {
+    display:flex;
+    justify-content: space-between;
+    height:6.4em;
+    width:100%;
+    margin-top:4em;
+}
+
+.login-form .btn-wrap > button{
+    width:calc(50% - 8px);
+    height:100%;    
+}
+
+
+@media only screen and (max-height : 1500px) and (min-height : 1081px) {
+    .login-form {
+        font-size:10px;
+    }
+}
+@media only screen and (max-height : 755px) and (min-height : 0px) {
+    .login-form {
+        font-size:7px;        
+    }
+}

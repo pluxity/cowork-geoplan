@@ -1,0 +1,89 @@
+@CHARSET "UTF-8";
+
+.PluxityPopup_mask {
+	position: absolute;
+	top: 0px;
+	left : 0px;
+	bottom : 0px;
+	right : 0px;
+	margin: 0px;
+	padding: 0px;
+	background: rgba(0, 0, 0, 0.3);
+}
+
+.PluxityPopup_loader {
+	position: absolute;
+	left: 0px;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+	background: rgba(255, 255, 255, 0.4);
+	text-align: center;
+}
+
+.PluxityPopup {
+	box-shadow: 0px 0px 5px black;
+	position: absolute !important;
+}
+
+.PluxityPopup .PluxityPopup_header {
+	height : 32px;
+	background: rgba(0,0,0,0.8);	
+}
+
+.PluxityPopup .PluxityPopup_content {
+	padding : 11px 11px;
+    background: rgba(1,16,24,.7);
+	font-size: 11px;
+}
+
+.PluxityPopup .PluxityPopup_content SPAN.popup_key{
+	color : #ccc;
+	display : inline-block;
+	width : 100px;
+	text-align : right;
+}
+.PluxityPopup .PluxityPopup_content SPAN.popup_value{
+	color : #2ecc71;
+	display : inline-block;
+	width : 100px;
+	text-align : center;
+}
+
+.PluxityPopup .PluxityPopup_content SPAN.popup_value.error{
+	color : #fe0000;
+}
+
+.PluxityPopup .PluxityPopup_header {
+	cursor: move;
+}
+
+.PluxityPopup .PluxityPopup_header .PluxityPopup_title {
+	height : 32px;
+	line-height : 32px;
+	padding-left: 10px;
+    padding-right: 100px;
+    font-size: 12px;
+    font-weight: bold;
+    float: left;
+    color: white;
+}
+
+.PluxityPopup .PluxityPopup_header .PluxityPopup_icon_area {
+	position : absolute;
+	top : 6px;
+	right : 16px;
+}
+
+.PluxityPopup .PluxityPopup_header .PluxityPopup_icon_area .PluxityPopup_icon{
+	margin: 4px -7px 0px 0px;	
+}
+
+.PluxityPopup .PluxityPopup_header .PluxityPopup_icon_area A{
+	cursor: pointer;
+}
+
+.PluxityPopup .noDisplay {
+	display: none !important;
+}
+

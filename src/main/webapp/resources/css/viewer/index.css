@@ -1,0 +1,308 @@
+@charset "utf-8";
+
+/* loading layer */
+#loadingLayer {
+	background-color:#fff;
+	border:2px solid #625f5b;
+	padding:20px;
+	line-height: 1em;
+	border-radius:0.5em;
+	-moz-border-radius: 0.5em;
+	-webkit-border-radius: 0.5em;
+	text-align:center;
+	color:#625f5b;
+	font-weight:bold;
+	position:absolute;
+	top:400px;
+	left:50%;
+	margin-left:-150px;
+	z-index:9999;
+	display:none;
+}
+
+.alarm-speaker {cursor:pointer;vertical-align:middle;}
+
+/* S:하단 열차 */
+#train-area{
+	top:0;
+	left:0;
+	position:absolute;
+}
+
+.debuggingBox{
+
+}
+
+.station_spot {
+	position:absolute;
+	width:10px;
+	height:10px;
+	/* background-color:red; */
+	z-index:100;
+	top:10px;
+}
+
+.up .station .station_spot {
+	left:13px;
+}
+
+.down .station .station_spot {
+	right:13px;
+}
+
+.up > .station_spot {
+	left:330px;
+}
+
+.down > .station_spot {
+	right:330px;
+}
+/* E:하단 열차 */
+
+/* S:뷰어 TTC 2호선 전체지도*/
+#layer-subway-map{
+	width:1280px;
+	height:720px;	
+	display:none;
+}
+
+#layer-subway-map .layer-cont{
+	/* height:100%; */
+	/* background:url("/resources/img/viewer/bg/viewer_img_line_two.png") no-repeat;
+	background-size:contain; */
+	padding : 0;	
+}
+
+#layer-subway-map img{
+	width:100%;
+}
+
+/* S: up down 으로 구분 */
+#layer-subway-map .train {position:absolute; width:34px; height:20px;}
+#layer-subway-map .train:before {content:''; position:absolute; top:0; left:0; z-index:0; width:34px; height:20px;}
+#layer-subway-map .train.on {-webkit-box-shadow:0px 0px 10px 2px rgba(255,255,255,1); -moz-box-shadow:0px 0px 10px 2px rgba(255,255,255,1); box-shadow:0px 0px 10px 2px rgba(255,255,255,1);}
+#layer-subway-map .train a {position:relative; z-index:1; display:block; width:34px; height:20px; font-size:14px; font-weight:bold; text-align:center; line-height:1; box-sizing:border-box;}
+#layer-subway-map .train.down a {padding:10px 0 0 0px; color:#00fd6a;}
+#layer-subway-map .train.down:before {background:url(/resources/img/viewer/img/img_outline_subway_s.png) 0 0 no-repeat;}
+/* #layer-subway-map .train.down.on:before {background:url(/resources/img/dashboard/img/img_outline_subway_on.png) 0 0 no-repeat;} */
+#layer-subway-map .train.up a {padding:7px 0 0 0px; color:#fff;}
+#layer-subway-map .train.up:before {background:url(/resources/img/viewer/img/img_inline_subway_s.png) 0 0 no-repeat;}
+/* #layer-subway-map .train.up.on:before {background:url(/resources/img/dashboard/img/img_inline_subway_on.png) 0 0 no-repeat;} */
+/* E: up down 으로 구분 */
+/* E:뷰어 TTC 2호선 전체지도*/
+
+
+
+/* 20200806 */
+.layer-popup-widget {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	z-index: 9999;
+	transform: translate(-50%, -50%);
+	/* background: rgba(40, 42, 49, 0.9); */
+	background: rgba(40, 42, 49, 1);
+	border: 2px solid #8622ff;
+	box-sizing: border-box;
+}
+
+.layer-popup-widget .layer-head {
+	position: relative;
+	height: 30px;
+	border-bottom: 2px solid #7c7c7c;
+}
+
+.layer-popup-widget .layer-head:after {
+	content: '';
+	clear: both;
+	display: block;
+}
+
+.layer-popup-widget .layer-head .title {
+	position: relative;
+	display: inline-block;
+	padding-left: 40px;
+	font-size: 17px;
+	font-weight: bold;
+	line-height: 30px;
+	color: #3adee8;
+}
+
+.layer-popup-widget .layer-head .title:before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 12px;
+	width: 19px;
+	height: 20px;
+	margin-top: -10px;
+	background: url(/resources/img/viewer/ico/icon_bullet.png) 0 0 no-repeat;
+}
+
+.layer-popup-widget .layer-head .close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 30px;
+	height: 30px;
+	background: url(/resources/img/viewer/btn/btn_close02.png) center center no-repeat;
+}
+
+.layer-popup-widget .layer-cont {
+	padding: 0;
+}
+
+/* 깜빡임처리 */
+.blinking {
+	-webkit-animation: blink 0.5s ease-in-out infinite alternate;
+	-moz-animation: blink 0.5s ease-in-out infinite alternate;
+	animation: blink 0.5s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes blink {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@-moz-keyframes blink {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes blink {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+/* 20200821 */
+
+#poiDetailPop .layer-cont {
+	color: white;
+}
+
+.detail-table tr:nth-child(even) {
+	background: rgba(246, 248, 250, .1);
+}
+
+.detail-table tr.on {
+	background: rgba(85, 171, 237, .5) !important;
+}
+
+.detail-table p {
+	padding-left: 10px;
+}
+
+.detail-table table {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.detail-table td,
+.detail-table th {
+	text-align: center;
+	color: white;
+	/* border: 1px solid #dddddd; */
+	text-align: left;
+	padding: 8px;
+}
+
+.detail-table thead th {
+	background: rgba(246, 248, 250, .1);
+}
+
+.detail-table tbody tr {
+	cursor: pointer;
+}
+
+#poi-pop-contents .btn-cctv,
+#poi-pop-contents .btn-graph {
+	background-repeat: no-repeat;
+	width: 33px;
+	height: 21px;
+	cursor: pointer;
+	float: left;
+	margin: 5px 0px 5px 0px;
+}
+
+#poi-pop-contents .btn-cctv {
+	background-image: url(/resources/img/viewer/ico/ico_camera.png);
+}
+
+#poi-pop-contents .btn-graph {
+	background-image: url(/resources/img/viewer/ico/ico_graph.png);
+}
+
+.detail-table .poiStatus {
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	display: inline-block;
+	position: relative;
+	top: 3px;
+	margin-right: 5px;
+}
+.detail-table .poiStatus0{ background-color: #00FF00; }
+.detail-table .poiStatus1{ background-color: #FFFF00; }
+.detail-table .poiStatus2{ background-color: #FF8000; }
+.detail-table .poiStatus3{ background-color: #FF0000; }
+.detail-table .poiStatus4{ background-color: #E6E6E6; }
+.detail-table .poiStatus5{ background-color: #848484; }
+
+#poiDetailPop .graph-header{
+	display:flex;
+	width:475px;
+}
+#poiDetailPop .graph-header div{
+	display: flex;
+    background-color: #758FAD;
+    align-content: center;
+    width: 100px;
+    justify-content: space-around;
+    align-items: center;
+}
+#poiDetailPop .graph-header a {
+	color:white;
+	width: 50px;
+	background-color: #A6BCD7;	
+	flex-grow: 1;
+	text-align: center;
+	border-style: solid;
+	border-width: 3px;
+	border-color: #758FAD;
+}
+#poiDetailPop .graph-header a.on {
+	background-color: #4F81BD;
+}
+
+.detail-table td,
+.detail-table th {
+	text-align: center !important;
+}
+
+#energyGuide{
+	display: none;
+    width: 460px;
+    height: 208px;
+    position: absolute;
+    top: 150px;
+    right: 15px;
+    background-image: url(/resources/img/viewer/img/energy_guide.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+}

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.POIIconsetMapper">
+
+	<!-- 맵카테고리 -->
+	<resultMap type="com.plx.app.admin.vo.POIIconsetVO" id="rPOIIconsetVO">
+		<id property="iconsetNo" column="iconset_no" />
+	 	<result property="iconsetNm" column="iconset_nm" />
+	 	<result property="iconsetDesc" column="iconset_desc" />
+	 	<result property="iconset2d0" column="iconset_2d_0" />
+	 	<result property="iconset2d1" column="iconset_2d_1" />
+	 	<result property="iconset2d2" column="iconset_2d_2" />
+		<result property="iconset2d3" column="iconset_2d_3" />
+		<result property="iconset2d4" column="iconset_2d_4" />
+
+	 	<result property="iconset2d0FilePath" column="iconset_2d_0_file_path" />
+	 	<result property="iconset2d1FilePath" column="iconset_2d_1_file_path" />
+	 	<result property="iconset2d2FilePath" column="iconset_2d_2_file_path" />
+		<result property="iconset2d3FilePath" column="iconset_2d_3_file_path" />
+		<result property="iconset2d4FilePath" column="iconset_2d_4_file_path" />
+
+		<result property="iconset3d" column="iconset_3d" />
+		<result property="iconset3dColor1" column="iconset_3d_color1" />
+		<result property="iconset3dColor2" column="iconset_3d_color2" />
+		<result property="iconset3dColor3" column="iconset_3d_color3" />
+		<result property="iconset3dColor4" column="iconset_3d_color4" />
+		<result property="iconset3dThumb" column="iconset_3d_thumb" />
+		<result property="iconset3dThumbFilePath" column="iconset_3d_thumb_file_path" />
+
+		<result property="iconsetType" column="iconset_type" />
+
+		<result property="regUsr" 		column="reg_usr" />
+		<result property="regDt" 		column="reg_dt" />
+		<result property="updUsr" 		column="upd_usr" />
+		<result property="updDt" 		column="upd_dt" />
+	</resultMap>
+
+		<!-- 조회 조건 -->
+ 	<sql id="search">
+ 		<if test="iconsetNm != null">
+			ICONSET_NM LIKE CONCAT('%',#{iconsetNm},'%')
+		</if>
+		<if test="iconsetNm == null and searchKeyword != null">
+			ICONSET_NM LIKE CONCAT('%',#{searchKeyword},'%') OR ICONSET_DESC LIKE CONCAT('%',#{searchKeyword},'%')
+		</if>
+		<if test="iconsetNo != null">
+			AND ICONSET_NO = #{iconsetNo}
+		</if>		
+	</sql>
+
+	<select id="selectPOIIconsetList" parameterType="POIIconsetVO" resultMap="rPOIIconsetVO">
+		SELECT PI.*,
+			CONCAT(FI1.FILE_PATH, FI1.FILE_SAVE_NM) AS ICONSET_2D_0_FILE_PATH,
+			CONCAT(FI2.FILE_PATH, FI2.FILE_SAVE_NM) AS ICONSET_2D_1_FILE_PATH,
+			CONCAT(FI3.FILE_PATH, FI3.FILE_SAVE_NM) AS ICONSET_2D_2_FILE_PATH,
+			CONCAT(FI4.FILE_PATH, FI4.FILE_SAVE_NM) AS ICONSET_2D_3_FILE_PATH,
+			CONCAT(FI5.FILE_PATH, FI5.FILE_SAVE_NM) AS ICONSET_2D_4_FILE_PATH
+		FROM
+			TB_POI_ICONSET PI
+			LEFT JOIN TB_FILE_INFO FI1 ON (PI.ICONSET_2D_0 = FI1.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI2 ON (PI.ICONSET_2D_1 = FI2.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI3 ON (PI.ICONSET_2D_2 = FI3.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI4 ON (PI.ICONSET_2D_3 = FI4.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI5 ON (PI.ICONSET_2D_4 = FI5.FILE_NO)
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+		ORDER BY 
+		<choose>
+			<when test="sortBy eq 'iconset_nm' ">iconset_nm</when>	
+			<otherwise>PI.reg_dt</otherwise>
+		</choose>
+		<choose>
+				<when test="sortType eq 'ASC' ">ASC</when>	
+				<otherwise>DESC</otherwise>
+		</choose>
+		<if test='page > 0 and pageSize > 0'>
+			LIMIT #{pageSize} OFFSET #{offset}
+		</if>
+	</select>
+
+	<select id="selectPOIIconsetDetail" parameterType="POIIconsetVO" resultMap="rPOIIconsetVO">
+		SELECT pi.*,  
+			CONCAT(FI1.FILE_PATH, FI1.FILE_SAVE_NM) AS ICONSET_2D_0_FILE_PATH,
+			CONCAT(FI2.FILE_PATH, FI2.FILE_SAVE_NM) AS ICONSET_2D_1_FILE_PATH,
+			CONCAT(FI3.FILE_PATH, FI3.FILE_SAVE_NM) AS ICONSET_2D_2_FILE_PATH,
+			CONCAT(FI4.FILE_PATH, FI4.FILE_SAVE_NM) AS ICONSET_2D_3_FILE_PATH,
+			CONCAT(FI5.FILE_PATH, FI5.FILE_SAVE_NM) AS ICONSET_2D_4_FILE_PATH
+		FROM TB_POI_ICONSET pi
+			LEFT JOIN TB_FILE_INFO FI1 ON (PI.ICONSET_2D_0 = FI1.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI2 ON (PI.ICONSET_2D_1 = FI2.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI3 ON (PI.ICONSET_2D_2 = FI3.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI4 ON (PI.ICONSET_2D_3 = FI4.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI5 ON (PI.ICONSET_2D_4 = FI5.FILE_NO)
+		WHERE ICONSET_NO = #{iconsetNo}
+	</select>
+
+	<select id="selectPOIIconsetTotal" parameterType="POIIconsetVO" resultType="int">
+		SELECT count(*) FROM TB_POI_ICONSET
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+	</select>
+
+	<update id="updatePOIIconset" parameterType="POIIconsetVO">
+		UPDATE TB_POI_ICONSET
+		SET
+			ICONSET_NM          = #{iconsetNm}
+			, ICONSET_DESC      = #{iconsetDesc}
+			<if test="iconset2d0 > 0">
+				, ICONSET_2D_0      = #{iconset2d0}
+			</if>
+		    <choose>
+    			<when test="iconset2d1 > 0">
+      				, ICONSET_2D_1 = #{iconset2d1}
+    			</when>
+    			<otherwise>
+    			</otherwise>
+  			</choose>
+		    <choose>
+    			<when test="iconset2d2 > 0">
+      				, ICONSET_2D_2 = #{iconset2d2}
+    			</when>
+    			<otherwise>
+    			</otherwise>
+  			</choose>
+		    <choose>
+    			<when test="iconset2d3 > 0">
+      				, ICONSET_2D_3 = #{iconset2d3}
+    			</when>
+    			<otherwise>
+    			</otherwise>
+  			</choose>
+		    <choose>
+    			<when test="iconset2d4 > 0">
+      				, ICONSET_2D_4 = #{iconset2d4}
+    			</when>
+    			<otherwise>
+    			</otherwise>
+  			</choose>
+
+<!-- 			<if test="iconset2d1 > 0">
+				, ICONSET_2D_1      = #{iconset2d1}
+			</if>
+			<if test="iconset2d2 > 0">
+				, ICONSET_2D_2      = #{iconset2d2}
+			</if>
+			<if test="iconset2d3 > 0">
+				, ICONSET_2D_3      = #{iconset2d3}
+			</if>
+			<if test="iconset2d4 > 0">
+				, ICONSET_2D_4      = #{iconset2d4}
+			</if> -->
+
+			, ICONSET_3D_COLOR1 = #{iconset3dColor1}
+			, ICONSET_3D_COLOR2 = #{iconset3dColor2}
+			, ICONSET_3D_COLOR3 = #{iconset3dColor3}
+			, ICONSET_3D_COLOR4 = #{iconset3dColor4}
+			<if test="iconset3dThumb != 0">
+				, ICONSET_3D_THUMB  = #{iconset3dThumb}
+				, ICONSET_3D        = #{iconset3d}
+				, ICONSET_3D_THUMB_FILE_PATH  = #{iconset3dThumbFilePath}
+			</if>
+
+			, ICONSET_TYPE      = #{iconsetType}
+			, REG_USR           = #{regUsr}
+			, UPD_USR           = #{updUsr}
+		WHERE
+			ICONSET_NO = #{iconsetNo};
+	</update>
+
+	<delete id="deletePoIIconset" parameterType="POIIconsetVO">
+		DELETE
+			FROM TB_POI_ICONSET
+		WHERE
+			<if test = "iconsetNo != null and iconsetNo != 0">
+				ICONSET_NO = #{iconsetNo}
+			</if>
+			<if test = "iconsetNo == null and iconsetList != null">
+				ICONSET_NO IN
+				<foreach collection="iconsetList" item="type"  open="(" close=")" separator=",">
+   					#{type.iconsetNo}
+        		</foreach>
+			</if>
+	</delete>
+
+	<insert id="insertPOIIconset" parameterType="POIIconsetVO">
+		INSERT INTO TB_POI_ICONSET
+		(
+			ICONSET_NM
+			, ICONSET_DESC
+			, ICONSET_2D_0
+			, ICONSET_2D_1
+			, ICONSET_2D_2
+			, ICONSET_2D_3
+			, ICONSET_2D_4
+			, ICONSET_3D
+			, ICONSET_3D_COLOR1
+			, ICONSET_3D_COLOR2
+			, ICONSET_3D_COLOR3
+			, ICONSET_3D_COLOR4
+			, ICONSET_3D_THUMB
+			, ICONSET_TYPE
+			, REG_USR
+			, UPD_USR
+		)
+		VALUES
+		(
+			#{iconsetNm}
+			,#{iconsetDesc}
+			,#{iconset2d0}
+			,#{iconset2d1}
+			,#{iconset2d2}
+			,#{iconset2d3}
+			,#{iconset2d4}
+			,#{iconset3d}
+			,#{iconset3dColor1}
+			,#{iconset3dColor2}
+			,#{iconset3dColor3}
+			,#{iconset3dColor4}
+			,#{iconset3dThumb}
+			,#{iconsetType}
+			,#{regUsr}
+			,#{updUsr}
+		);
+		<selectKey resultType="int" keyProperty="iconsetNo" order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+	</insert>
+</mapper>

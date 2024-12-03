@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.SystemInfoMapper">
+
+	<resultMap type="com.plx.app.admin.vo.SystemInfoVO" id="rSystemInfoVO">
+		<result property="poiLength" 		column="poi_length" />
+		<result property="poiIconRatio" 	column="poi_icon_ratio" />
+		<result property="poiTextRatio" 	column="poi_text_ratio" />
+		<result property="updUsr" 			column="upd_usr" />
+		<result property="updDt" 			column="upd_dt" />
+	</resultMap>
+
+	<!-- 	시스템 설정값 조회 -->
+	<select id="selectSystemInfo" resultMap="rSystemInfoVO">
+		SELECT
+			si.*
+		FROM tb_system_info si
+	</select>
+
+	<!-- 	시스템 설정값 입력 -->
+	<insert id="insertSystemInfo" parameterType="systemInfoVO">
+		INSERT INTO tb_system_info(
+			poi_length,
+			poi_icon_ratio,
+			poi_text_ratio,
+			upd_usr,
+			upd_dt
+		) VALUES(
+			#{poiLength},
+			#{poiIconRatio},
+			#{poiTextRatio},
+			#{updUsr},
+			sysdate()
+		)
+	</insert>
+
+	<!-- 	시스템 설정값 수정 -->
+	<update id="updateSystemInfo" parameterType="systemInfoVO">
+		UPDATE tb_system_info
+		<trim prefix="SET" suffixOverrides=",">
+			<if test='poiLength != null'>poi_length = #{poiLength},</if>
+			<if test='poiIconRatio != null'>poi_icon_ratio = #{poiIconRatio},</if>
+			<if test='poiTextRatio != null'>poi_text_ratio = #{poiTextRatio},</if>
+			<if test='updUsr != ""'>upd_usr = #{updUsr},</if>
+			upd_dt = SYSDATE()
+		</trim>
+	</update>
+</mapper>

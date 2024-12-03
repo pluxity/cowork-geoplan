@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.POICategoryMapper">
+
+	<!-- POI Category resultMap  -->
+	<resultMap type="com.plx.app.admin.vo.POICategoryVO" id="rPOICategoryVO">
+		<result property="category2No" column="category2_no" />
+		<result property="category2Nm" column="category2_nm" />
+		<result property="categoryNo" column="Category_no" />
+		<result property="regUsr" column="reg_usr" />
+		<result property="regDt" column="reg_dt" />
+		<result property="updUsr" column="upd_usr" />
+		<result property="updDt" column="upd_dt" />
+		<result property="orderNo" column="order_no" />
+		<result property="category1No" column="category1_no" />
+		<result property="category1Nm" column="category1_nm" />
+		<result property="poiCount" column="poi_count" />
+
+		<result property="categoryCode" column="category_code" />		
+
+		<result property="regUsr" column="reg_usr" />
+		<result property="regDt" column="reg_dt" />
+		<result property="updUsr" column="upd_usr" />
+		<result property="updDt" column="upd_dt" />
+
+		<association property="poiIconset" resultMap="com.plx.app.admin.mapper.POIIconsetMapper.rPOIIconsetVO" />
+	</resultMap>
+
+	<resultMap type="java.util.LinkedHashMap" id="rPoiCategory1">
+		<id property="category1No" column="category1_no" />
+		<result property="category1Nm" column="category1_nm" />
+		<collection property="categoryList" javaType="java.util.ArrayList" resultMap="rPoiCategory2" />
+	</resultMap>
+
+	<resultMap type="java.util.LinkedHashMap" id="rPoiCategory2">
+		<id property="category2No" column="category2_no" />
+		<result property="category2Nm" column="category2_nm" />
+	</resultMap>
+
+	<sql id="search">
+		<if test="category1No != null">
+			AND PC1.CATEGORY1_NO = #{category1No}
+		</if>
+		<if test="category1Nm != null and category1Nm != ''">
+			AND PC1.CATEGORY1_NM LIKE CONCAT('%',#{category1Nm},'%')
+		</if>
+		<if test="category2No != null">
+			AND PC2.CATEGORY2_NO = #{category2No}
+		</if>
+		<if test="category2Nm != null and category2Nm != ''">
+			AND PC2.CATEGORY2_NM LIKE CONCAT('%',#{category2Nm},'%')
+		</if>
+	</sql>
+
+	<!-- api 파트랑 분리할것인지? 서브쿼리절만 추가함-->
+	<select id="selectPOICategory1List" parameterType="POICategoryVO" resultMap="rPOICategoryVO">
+		SELECT
+			PC1.*
+		<if test="mapNo != null">
+				,(SELECT COUNT(*) FROM TB_POI_INFO WHERE CATEGORY1_NO = PC1.CATEGORY1_NO AND MAP_NO = #{mapNo} AND position_yn = 'Y') AS POI_COUNT
+			</if>
+		FROM TB_POI_CATEGORY1 PC1
+		<if test='grpNo != null and grpNo > 0'>
+		JOIN tb_usrgrp_poi ugp ON pc1.category1_no = ugp.category1_no AND ugp.grp_no = #{grpNo} AND ugp.role_type = '1'
+     	</if>
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+		ORDER BY PC1.ORDER_NO ASC;
+	</select>
+
+	<select id="selectPOICategory2List" parameterType="POICategoryVO" resultMap="rPOICategoryVO">
+		SELECT
+			PC1.*, PC2.*
+		<if test="mapNo != null">
+				,(SELECT COUNT(*) FROM TB_POI_INFO WHERE CATEGORY2_NO = PC2.CATEGORY2_NO AND MAP_NO = #{mapNo} AND position_yn = 'Y') AS POI_COUNT
+			</if>
+		FROM TB_POI_CATEGORY1 PC1
+		INNER JOIN TB_POI_CATEGORY2 PC2 ON (PC1.CATEGORY1_NO = PC2.CATEGORY1_NO)
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+		ORDER BY PC2.ORDER_NO ASC;
+	</select>
+
+	<select id="selectPOICategory1Detail" parameterType="POICategoryVO" resultMap="rPOICategoryVO">
+		SELECT
+			PC1.*
+		FROM
+			TB_POI_CATEGORY1 PC1
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+	</select>
+
+	<select id="selectPOICategory2Detail" parameterType="POICategoryVO" resultMap="rPOICategoryVO">
+		SELECT
+			PC1.*,
+			PC2.*,
+			PI.*,
+			CONCAT(FI1.FILE_PATH, FI1.FILE_SAVE_NM) AS ICONSET_2D_0_FILE_PATH,
+			CONCAT(FI2.FILE_PATH, FI2.FILE_SAVE_NM) AS ICONSET_2D_1_FILE_PATH,
+			CONCAT(FI3.FILE_PATH, FI3.FILE_SAVE_NM) AS ICONSET_2D_2_FILE_PATH,
+			CONCAT(FI4.FILE_PATH, FI4.FILE_SAVE_NM) AS ICONSET_2D_3_FILE_PATH,
+			CONCAT(FI5.FILE_PATH, FI5.FILE_SAVE_NM) AS ICONSET_2D_4_FILE_PATH
+		FROM
+			TB_POI_CATEGORY1 PC1
+			INNER JOIN TB_POI_CATEGORY2 PC2 ON (PC1.CATEGORY1_NO = PC2.CATEGORY1_NO)
+			LEFT JOIN TB_POI_ICONSET PI ON (PC2.ICONSET_NO = PI.ICONSET_NO)
+			LEFT JOIN TB_FILE_INFO FI1 ON (PI.ICONSET_2D_0 = FI1.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI2 ON (PI.ICONSET_2D_1 = FI2.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI3 ON (PI.ICONSET_2D_2 = FI3.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI4 ON (PI.ICONSET_2D_3 = FI4.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI5 ON (PI.ICONSET_2D_4 = FI5.FILE_NO)
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+
+	</select>
+
+	<select id="selectPOICategoryDetailList" parameterType="POICategoryVO" resultMap="rPOICategoryVO">
+		SELECT
+			PC1.*,
+			PC2.*,
+			PI.*,
+			CONCAT(FI1.FILE_PATH, FI1.FILE_SAVE_NM) AS ICONSET_2D_0_FILE_PATH,
+			CONCAT(FI2.FILE_PATH, FI2.FILE_SAVE_NM) AS ICONSET_2D_1_FILE_PATH,
+			CONCAT(FI3.FILE_PATH, FI3.FILE_SAVE_NM) AS ICONSET_2D_2_FILE_PATH,
+			CONCAT(FI4.FILE_PATH, FI4.FILE_SAVE_NM) AS ICONSET_2D_3_FILE_PATH,
+			CONCAT(FI5.FILE_PATH, FI5.FILE_SAVE_NM) AS ICONSET_2D_4_FILE_PATH
+		FROM
+			TB_POI_CATEGORY1 PC1
+			<if test='grpNo != null and grpNo > 0'>
+			JOIN tb_usrgrp_poi ugp ON pc1.category1_no = ugp.category1_no AND ugp.grp_no = #{grpNo} AND ugp.role_type = '1'
+			</if>
+			INNER JOIN TB_POI_CATEGORY2 PC2 ON (PC1.CATEGORY1_NO = PC2.CATEGORY1_NO)
+			LEFT JOIN TB_POI_ICONSET PI ON (PC2.ICONSET_NO = PI.ICONSET_NO)
+			LEFT JOIN TB_FILE_INFO FI1 ON (PI.ICONSET_2D_0 = FI1.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI2 ON (PI.ICONSET_2D_1 = FI2.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI3 ON (PI.ICONSET_2D_2 = FI3.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI4 ON (PI.ICONSET_2D_3 = FI4.FILE_NO)
+			LEFT JOIN TB_FILE_INFO FI5 ON (PI.ICONSET_2D_4 = FI5.FILE_NO)
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<include refid="search" />
+		</trim>
+
+	</select>
+
+	<insert id="insertPOICategory1" parameterType="POICategoryVO">
+		INSERT INTO TB_POI_CATEGORY1
+			(
+			CATEGORY1_NM,
+			REG_USR,
+			ORDER_NO
+			)
+		VALUES (
+			#{categoryNm},
+			#{regUsr},
+			(SELECT IFNULL(MAX(ORDER_NO)+1,1) FROM TB_POI_CATEGORY1 B)
+			);
+	</insert>
+
+	<insert id="insertPOICategory2" parameterType="POICategoryVO">
+		INSERT INTO TB_POI_CATEGORY2
+			(
+			CATEGORY2_NM,
+			ICONSET_NO,
+			REG_USR,
+			ORDER_NO,
+			CATEGORY1_NO
+			)
+		VALUES (
+			#{categoryNm},
+			#{iconsetNo},
+			#{regUsr},
+			(SELECT IFNULL(MAX(ORDER_NO)+1,1) FROM TB_POI_CATEGORY2 B WHERE CATEGORY1_NO=#{category1No} ),
+			#{category1No}
+			);
+	</insert>
+
+	<update id="updatePOICategory1" parameterType="POICategoryVO">
+		UPDATE TB_POI_CATEGORY1
+		SET
+		<if test="categoryNm != null and categoryNm != ''">
+				CATEGORY1_NM = #{categoryNm},
+			</if>
+		<if test="updUsr != null and updUsr != ''">
+				UPD_USR = #{updUsr},
+			</if>
+		UPD_DT= sysdate()
+		WHERE
+			CATEGORY1_NO = #{categoryNo};
+	</update>
+
+	<update id="updatePOICategory2" parameterType="POICategoryVO">
+		UPDATE TB_POI_CATEGORY2
+		SET
+		<if test="categoryNm != null and categoryNm != ''">
+				CATEGORY2_NM = #{categoryNm},
+			</if>
+		<if test="updUsr != null and updUsr != ''">
+				UPD_USR = #{updUsr},
+			</if>
+		<if test="iconsetNo != null and iconsetNo != ''">
+				ICONSET_NO = #{iconsetNo},
+			</if>
+		<if test="category1No != null and category1No != ''">
+				CATEGORY1_NO = #{category1No},
+			</if>
+		UPD_DT = sysdate()
+		WHERE
+			CATEGORY2_NO = #{categoryNo};
+	</update>
+
+	<delete id="deletePOICategory1" parameterType="POICategoryVO">
+		DELETE FROM TB_POI_CATEGORY1
+		WHERE
+			CATEGORY1_NO = #{category1No};
+	</delete>
+
+	<delete id="deletePOICategory2" parameterType="POICategoryVO">
+		DELETE FROM TB_POI_CATEGORY2
+		WHERE
+			CATEGORY2_NO = #{category2No};
+	</delete>
+
+	<update id="swapPOICategoryOrderNo1" parameterType="Integer">
+		UPDATE TB_POI_CATEGORY1 A
+		<![CDATA[ INNER JOIN TB_POI_CATEGORY1 B ON (A.CATEGORY1_NO  <>  B.CATEGORY1_NO) ]]>
+		SET A.ORDER_NO = B.ORDER_NO
+		WHERE
+			A.CATEGORY1_NO IN (#{arg1},#{arg0}) AND B.CATEGORY1_NO IN (#{arg1},#{arg0});
+	</update>
+
+	<update id="swapPOICategoryOrderNo2" parameterType="Integer">
+		UPDATE TB_POI_CATEGORY2 A
+		<![CDATA[ INNER JOIN TB_POI_CATEGORY2 B ON (A.CATEGORY2_NO  <>  B.CATEGORY2_NO) ]]>
+		SET A.ORDER_NO = B.ORDER_NO
+		WHERE
+			A.CATEGORY2_NO IN (#{arg1},#{arg0}) AND B.CATEGORY2_NO IN (#{arg1},#{arg0});
+	</update>
+
+	<select id="poiCategoryTree" resultMap="rPoiCategory1">
+		SELECT
+			pc1.category1_no,
+			pc1.category1_nm,
+			pc2.category2_no,
+			pc2.category2_nm
+		FROM tb_poi_category1 pc1
+		LEFT JOIN tb_poi_category2 pc2 ON pc1.category1_no = pc2.category1_no
+		ORDER BY pc1.order_no, pc2.order_no
+	</select>
+</mapper>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.NoticeMapper">
+
+	<!-- Notice resultMap  -->
+
+	<resultMap type="noticeVO" id="rNoticeVO">
+
+		<id property="noticeNo" 		column="notice_no" />
+
+		<result property="noticeTitle"	column="notice_title" />
+		<result property="noticeBody"	column="notice_body" />
+		<result property="mapList" 		column="map_list" />
+
+		<result property="sdate"		column="sdate" />
+		<result property="edate"		column="edate" />
+
+		<result property="activeYn"		column="active_yn" />
+		<result property="emergencyYn"	column="emergency_yn" />
+
+		<result property="regUsr" 		column="reg_usr" />
+		<result property="regDt" 		column="reg_dt" />
+		<result property="updUsr" 		column="upd_usr" />
+		<result property="updDt" 		column="upd_dt" />
+
+	</resultMap>
+
+	<resultMap type="java.util.LinkedHashMap" id="rMapCategory1">
+		<id property="category1No"		column="category1_no"/>
+		<result property="category1Nm"	column="category1_nm" />
+		<collection property="categoryList" javaType="java.util.ArrayList" resultMap="rMapCategory2"/>
+	</resultMap>
+
+	<resultMap type="java.util.LinkedHashMap" id="rMapCategory2">
+		<id property="category2No"		column="category2_no"/>
+		<result property="category2Nm"	column="category2_nm" />
+		<collection property="categoryList" javaType="java.util.ArrayList" resultMap="rMapCategory3"/>
+	</resultMap>
+
+	<resultMap type="java.util.LinkedHashMap" id="rMapCategory3">
+		<id property="category3No"		column="category3_no"/>
+		<result property="category3Nm"	column="category3_nm" />
+		<collection property="categoryList" javaType="java.util.ArrayList" resultMap="rMapCategory4"/>
+	</resultMap>
+
+	<resultMap type="java.util.LinkedHashMap" id="rMapCategory4">
+		<id property="mapNo"			column="map_no"/>
+		<result property="mapNm"		column="map_nm" />
+	</resultMap>
+
+	<!-- Notice List -->
+	<select id="selectNoticeList" parameterType="noticeVO" resultMap="rNoticeVO">
+		SELECT
+			notice_no,
+			notice_title,
+			notice_body,
+			map_list,
+			DATE_FORMAT(sdate,'%Y-%m-%d') as sdate,
+			DATE_FORMAT(edate,'%Y-%m-%d') as edate,
+			active_yn,
+			emergency_yn,
+			reg_usr,
+			reg_dt,
+			upd_usr,
+			upd_dt
+		FROM
+			tb_notice
+		WHERE
+			1=1
+			<!-- 검색 조건 -->
+			<!-- 타이틀 검색 -->
+			<!-- 기간 검색 -->
+			<if test="searchKeyword != null and searchKeyword != '' ">
+				<if test="searchType eq 'all' ">
+					AND notice_title LIKE CONCAT('%',#{searchKeyword},'%') OR notice_body LIKE CONCAT('%',#{searchKeyword},'%')
+				</if>
+				<if test="searchType eq 'noticeTitle' ">
+					AND notice_title LIKE CONCAT('%',#{searchKeyword},'%') 
+					<!-- 					if문 조건을 searchKeyword != '' 도 추가함. searchKeyword가 null String일때도 if문 조건을 만족하기 때문.
+											오타 수정 noice_title => notice_title
+											noticeTitle값은 안넘어오고 searchKeyword 값으로 들어오기 때문에
+											noticeTitle => searchKeyword 로 변경
+					  -->
+					<!-- 					AND notice_title LIKE CONCAT('%',#{noticeTitle},'%') -->
+				</if>
+				<if test="searchType eq 'noticeBody' ">
+					AND notice_body LIKE CONCAT('%',#{searchKeyword},'%')
+				</if>
+			</if>
+		ORDER BY 
+		<choose>
+			<when test="sortBy eq 'notice_title' ">notice_title</when>	
+			<when test="sortBy eq 'sdate' ">sdate</when>	
+			<otherwise>notice_no</otherwise>
+		</choose>
+		<choose>
+				<when test="sortType eq 'ASC' ">ASC</when>	
+				<otherwise>DESC</otherwise>
+		</choose>		
+		<if test='page > 0 and pageSize > 0'>
+		LIMIT #{pageSize} OFFSET #{offset}
+		</if>
+	</select>
+
+	<select id="selectNoticeListCnt" parameterType="noticeVO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			tb_notice
+		WHERE
+			1=1
+			<!-- 검색 조건 -->
+			<!-- 타이틀 검색 -->
+			<!-- 기간 검색 -->
+			<if test="searchKeyword != null and searchKeyword != '' ">
+				<if test="searchType eq 'all' ">
+					AND notice_title LIKE CONCAT('%',#{searchKeyword},'%') OR notice_body LIKE CONCAT('%',#{searchKeyword},'%')
+				</if>
+				<if test="searchType eq 'noticeTitle' ">
+					AND notice_title LIKE CONCAT('%',#{searchKeyword},'%') 
+<!-- 					AND notice_title LIKE CONCAT('%',#{noticeTitle},'%') -->
+				</if>
+				<if test="searchType eq 'noticeBody' ">
+					AND notice_body LIKE CONCAT('%',#{searchKeyword},'%')
+				</if>
+			</if>
+	</select>
+
+	<select id="selectNotice" parameterType="noticeVO" resultMap="rNoticeVO">
+		SELECT
+			notice_no,
+			notice_title,
+			notice_body,
+			map_list,
+			DATE_FORMAT(sdate,'%Y-%m-%d') as sdate,
+			DATE_FORMAT(edate,'%Y-%m-%d') as edate,
+			active_yn,
+			emergency_yn,
+			reg_usr,
+			reg_dt,
+			upd_usr,
+			upd_dt
+		FROM
+			tb_notice
+		WHERE
+			notice_no = #{noticeNo}
+	</select>
+
+	<select id="selectMaptreeByGrpNo" parameterType="java.util.HashMap" resultMap="rMapCategory1">
+		WITH usrgrp_map AS
+		(
+			SELECT
+				map_no
+			FROM
+				tb_usrgrp_map
+			WHERE
+				1=1
+				<if test="grpNo != null and grpNo != 1 ">
+				AND
+				grp_no = #{grpNo}
+				</if>
+		)
+		SELECT
+			mi.category1_no
+			,mc1.category1_nm
+			,mi.category2_no
+			,mc2.category2_nm
+			,mi.category3_no
+			,mc3.category3_nm
+			,mi.map_no
+			,mi.map_nm
+		FROM
+			tb_map_info mi
+			,tb_map_category1 mc1
+			,tb_map_category2 mc2
+			,tb_map_category3 mc3
+			,usrgrp_map
+		WHERE
+			mi.category1_no  = mc1.category1_no
+			AND
+			mi.category2_no  = mc2.category2_no
+			AND
+			mi.category3_no  = mc3.category3_no
+			AND
+			mi.map_no = usrgrp_map.map_no
+		ORDER BY mc1.order_no, mc2.order_no, mc3.order_no, mi.map_no
+	</select>
+
+	<insert id="insertNotice" parameterType="noticeVO">
+		INSERT INTO tb_notice
+			(
+			notice_title
+			, notice_body
+			, map_list
+			, sdate
+			, edate
+			, active_yn
+			, emergency_yn
+			, reg_usr
+			, reg_dt
+			, upd_usr
+			, upd_dt)
+		VALUES (
+			#{noticeTitle}
+			, #{noticeBody}
+			, #{mapList}
+			, STR_TO_DATE(#{sdate}, '%Y-%m-%d')
+			, STR_TO_DATE(#{edate}, '%Y-%m-%d')
+			, #{activeYn}
+			, #{emergencyYn}
+			, #{regUsr}
+			, SYSDATE()
+			, #{updUsr}
+			, SYSDATE())
+		<selectKey resultType="int" keyProperty="noticeNo" order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+	</insert>
+
+
+	<update id="updateNotice" parameterType="noticeVO">
+		UPDATE
+			tb_notice
+		SET
+			notice_title = #{noticeTitle}
+			, notice_body = #{noticeBody}
+			, map_list = #{mapList}
+			, emergency_yn = #{emergencyYn}
+			, sdate = STR_TO_DATE(#{sdate}, '%Y-%m-%d')
+			, edate = STR_TO_DATE(#{edate}, '%Y-%m-%d')
+			, upd_usr = #{updUsr}
+			, upd_dt = SYSDATE()
+		WHERE
+			notice_no = #{noticeNo}
+	</update>
+
+	<update id="updateNoticeActive" parameterType="noticeVO">
+		UPDATE
+			tb_notice
+		SET
+			active_yn = #{activeYn}
+		WHERE
+			notice_no = #{noticeNo}
+	</update>
+
+	<delete id="deleteNotice" parameterType="noticeVO">
+		DELETE FROM
+			tb_notice
+		WHERE
+			notice_no = #{noticeNo}
+	</delete>
+
+
+</mapper>

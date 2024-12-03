@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.TopologyInfoMapper">
+
+<resultMap type="com.plx.app.admin.vo.TopologyInfoVO" id="rTopologyInfoVO">
+    <result property="topoNo" 		column="topo_no" />
+	<result property="topoType" 	column="topo_type" />
+	<result property="topoJson" 	column="topo_json" />
+	<result property="mapNo" 		column="map_no" />
+	<result property="regUsr" 		column="reg_usr" />
+	<result property="regDt" 		column="reg_dt" />
+	<result property="updUsr" 		column="upd_usr" />
+	<result property="updDt" 		column="upd_dt" />
+</resultMap>
+<select id="selectTopologyList" parameterType="java.lang.Integer" resultMap="rTopologyInfoVO">
+    SELECT
+        *
+    FROM
+         tb_topology_info
+	WHERE
+        map_no = #{mapNo}
+</select>
+
+<select id="selectTopologyInfo" parameterType="topologyInfoVO" resultMap="rTopologyInfoVO">
+    SELECT
+        *
+    FROM tb_topology_info
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+        <if test="topoNo != null and topoNo > 0">AND topo_no = #{topoNo}</if>
+        <if test="mapNo != null and mapNo > 0">AND map_no = #{mapNo}</if>
+        <if test="topoType != null">AND topo_type = #{topoType}</if>
+    </trim>
+</select>
+
+<update id="updateTopologyInfo" parameterType="topologyInfoVO">
+	UPDATE tb_topology_info
+	SET
+		upd_dt=sysdate()
+		<if test=" topoJson != null and topoJson != '' "> ,topo_json = #{topoJson} </if>
+		<if test=" updUsr != null"> ,upd_usr = #{updUsr} </if>
+	WHERE
+		map_no = #{mapNo}
+		AND
+	    topo_type = #{topoType}
+</update>
+</mapper>
