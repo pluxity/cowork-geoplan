@@ -173,6 +173,9 @@ window.addEventListener('load', function(){
         });
 
     }
+
+
+    document.getElementById('btnEvacuationRoute').addEventListener('click', evacuationRouteClick);
     
 });
 
@@ -343,4 +346,10 @@ const subClick = (e) => {
     let t = e.currentTarget;    
     t.classList.toggle('on');
 
+}
+
+const evacuationRouteClick = (e) => {
+    const t = e.currentTarget;
+
+    alert('대피경로 표출');
 }
