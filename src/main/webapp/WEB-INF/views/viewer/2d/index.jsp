@@ -23,9 +23,11 @@
 <body>
     <div id="navbar">
         <div class="left-area">
-            <div id="logo"><img src="/resources/img/logo_admin_header.gif" style="width:3rem;"/></div>
+            <div id="logo">
+<%--                <img src="/resources/img/logo_admin_header.gif" style="width:3rem;"/>--%>
+            </div>
             <div>
-                <span id="mainTitle">경상남도 실내공간정보</span>
+                <span id="mainTitle">3D 모델기반 실내안전지도</span>
                 <span id="subTitle">Viewer</span>
             </div>
         </div>

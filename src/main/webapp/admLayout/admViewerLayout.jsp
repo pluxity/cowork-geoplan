@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
 <meta name="author" content="">
-<title>GNIS 3D MAP MANAGER</title>
+<title>3D 모델기반 실내안전지도</title>
 <link href="<c:url value='/resources/img/favicon.ico' />" type="image/x-icon" rel="shortcut icon" />
 <link href="<c:url value='/resources/css/fontawesome/all.min.css' />" rel="stylesheet">
 <link href="<c:url value='/resources/css/adm/sb-admin.min.css' />" rel="stylesheet">

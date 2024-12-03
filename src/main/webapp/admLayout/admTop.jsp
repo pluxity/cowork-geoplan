@@ -5,7 +5,7 @@
 			<i class="fas fa-bars"></i>
 		</button>
 		<a class="navbar-brand mr-1" href="/adm/main/index.do"><img src="/resources/img/logo_admin_header.gif" style="height:43px;">
-			<span>실내공간정보관리시스템</span>
+			<span>3D모델기반 실내안전지도</span>
 		</a>
 	    <!-- Navbar Search -->
 	    <form class="d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0"></form>

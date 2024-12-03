@@ -21,7 +21,7 @@ const PluxityMap = function(targetElementId, mapOptions , markerList) {
 
     // Default Feature Style
     const defaultOptions = {
-        center: new kakao.maps.LatLng(35.23770717139541, 128.69192185958292),
+        center: new kakao.maps.LatLng(36.153134716579224, 128.29034018758654),
         level: 3
     };
     const options = mapOptions ? mapOptions : defaultOptions;

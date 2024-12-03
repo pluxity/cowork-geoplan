@@ -15,11 +15,8 @@
 <body>
     <div class="container">
         <form id="loginFrm" name="loginFrm" class="login-form">
-            <h2>
-                <img src="<c:url value='/resources/img/logo.png' />" alt="경상남도">
-            </h2>
             <p class="login-tit">
-                <span class="txt">실내공간정보관리시스템</span>
+                <span class="txt">3D모델기반 실내안전지도</span>
             </p>
             <p class="login-txt">
                 <span class="txt">LOGIN</span>

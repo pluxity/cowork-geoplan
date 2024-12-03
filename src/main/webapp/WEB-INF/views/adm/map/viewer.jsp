@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 		<a class="navbar-brand mr-1" href="/adm/main/index.do"><img src="/resources/img/logo_admin_header.gif" style="height:43px;">
-			<span style="font-weight: bolder">실내공간정보관리시스템</span>
+			<span style="font-weight: bolder">3D모델기반 실내안전지도</span>
 		</a>
 		<span class="d-none d-md-inline-block ml-auto mr-0 my-2 my-md-0 viewer-title"></span>
 	</nav>
