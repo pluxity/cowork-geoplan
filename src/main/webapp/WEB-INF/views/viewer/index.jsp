@@ -169,6 +169,22 @@
                         </button>
                         <ul class="ul-floor"></ul>
                     </div>
+
+                    <div class="head-count-wrap">
+                        <div class="head-count total">
+                            <span>총 인원</span>
+                            <span id="totalCount"></span><span>명</span>
+                        </div>
+                        <div class="head-count current-floor">
+                            <span>현재 층</span>
+                            <span id="currentFloorCount"></span><span>명</span>
+                        </div>
+                    </div>
+
+                    <div class="evacuation-route-wrap">
+                        <button id="btnEvacuationRoute">대피 경로</button>
+                    </div>
+
                     <div class="mini_map_wrap">
                         <div class="mini_map">
                             <div class="round_bg">
@@ -255,8 +271,6 @@
                 <a href="javascript:;" >{floorInfo.floorNm} {poiNm}</a>
             </li>
         </template>
-
-
 
         <c:import url="/WEB-INF/views/cmn/constant.jsp" /> <!-- Constant -->
 

@@ -1013,11 +1013,13 @@
     bottom:0;
     right:0;
     font-size:1vh;
+    display: flex;
+    gap: .5rem;
 }
 .right_btn_wrap .floor_wrap {
     position:relative;
     bottom:24px;
-    right:436px;
+    right:35rem;
 }
 .right_btn_wrap .floor_wrap.on {
 
@@ -1054,7 +1056,7 @@
 }
 .right_btn_wrap .floor_wrap .btn_all .box > .txt {
     color:#ffffff;
-    font-size:1.8em;
+    font-size:1.8rem;
 }
 .right_btn_wrap .floor_wrap.on .btn_all {
     background: #3C6BF1;
@@ -1261,6 +1263,50 @@
     background-size:3.2em;
 }
 
+.right_btn_wrap > .head-count-wrap,.right_btn_wrap > .evacuation-route-wrap  {
+    position:relative;
+    bottom:20px;
+    height: 40px;
+    right: 30rem;
+}
+
+.right_btn_wrap > .head-count-wrap {
+    background-color: rgb(255 255 255 / 80%);
+}
+
+.head-count-wrap {
+    display: flex;
+}
+
+.head-count {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    padding: .5rem 2rem;
+    border: 1px solid #C3CCE9;
+
+}
+
+.head-count SPAN:first-child {
+    font-size: 1.5rem;
+}
+
+.head-count-wrap SPAN {
+    color: #3C55A5;
+    font-size: 1.8rem;
+}
+
+#btnEvacuationRoute {
+    background-color: #3C6BF1;
+    color: #FFFFFF;
+    width: 100%;
+    height: 100%;
+    font-size: 1.4rem;
+    padding: .5rem 2rem;
+    border: none;
+    cursor: pointer;
+}
 
 .poi_box.on  {
     /*display:block;*/
@@ -1331,6 +1377,16 @@ DIV:is(.popup_layer__measure) ul > li > button {
     border-radius: 10rem;
     border : 1px solid black;
     flex:1;
+}
+
+.text-white {
+    color: #FFFFFF !important;
+}
+.bg-red {
+    background-color: #D80004 !important;
+}
+.bg-dark-red {
+    background-color: #350506 !important;
 }
 
 
