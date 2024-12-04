@@ -105,7 +105,7 @@ const PluxityMap = function(targetElementId, mapOptions , markerList) {
                                         <span class="txt">${addressName}</span>
                                     </li>
                                     <li>
-                                        <span class="txt"><a href="/viewer/index.do?mapNo=${mapData.mapNo}" target="_blank">3D 뷰어 이동</a></span>
+                                        <span class="txt"><a href="/viewer/index.do?mapNo=${mapData.mapNo}" >3D 뷰어 이동</a></span>
                                     </li>
                                 </ul>
                             </div>`;
