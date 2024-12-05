@@ -294,9 +294,12 @@
 <%--        <script src="<c:url value='/resources/js/lib/inflate.min.js' />"></script>--%>
         <script src="<c:url value='/resources/js/lib/Px.Engine.js'/>"></script>
         <script src="<c:url value='/resources/js/lib/Plx.Viewer.js'/>"></script>
+
 		<script src="<c:url value='/resources/js/addons/camPos.js' />"></script>
         <script src="<c:url value='/resources/js/config/viewerConfig.js'/>"></script>
         <script src="<c:url value='/resources/js/main/index_pbl.js'/>"></script>
+
+        <script src="<c:url value='/resources/js/websocket/websocketHandler.js'/>"></script>
 
         <script src="<c:url value='/resources/js/viewer/index.js'/>"></script>
         <script src="<c:url value='/resources/js/viewer/viewerEventListener.js'/>"></script>

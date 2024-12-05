@@ -131,6 +131,14 @@ const webglCallbacks = {
         camPos.changeCamPos('all');
 
         Px.Camera.EnableScreenPanning();
+
+        fetch("/api/objects")
+            .then(res => res.json())
+            .then(data => {
+                Px.PointMesh.SetPoints(data);
+            })
+
+
     },
     changePoiCategory1: (poiCategory1Nos) => {
     },

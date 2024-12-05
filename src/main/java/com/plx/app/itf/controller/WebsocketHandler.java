@@ -38,32 +38,45 @@ public class WebsocketHandler extends TextWebSocketHandler {
 
         logger.info("{} 연결됨", session.getId());
         final Map<String, Object> sessionAttributes = session.getAttributes();
-        final LoginInfoVO loginInfo = (LoginInfoVO) sessionAttributes.get(LoginInfoVO.LOGIN_INFO);
-
-        if(loginInfo == null) { //로그인 정보가 없을경우.
-            System.out.println("로그인 정보 없음");
-            return;
-        }
+//        final LoginInfoVO loginInfo = (LoginInfoVO) sessionAttributes.get(LoginInfoVO.LOGIN_INFO);
+//
+//        if(loginInfo == null) { //로그인 정보가 없을경우.
+//            System.out.println("로그인 정보 없음");
+//            return;
+//        }
         sessionList.add(session);
-        final String userId = loginInfo.getUsrId();
-        List<WebSocketSession> webSocketSessionList = userSessionMap.get(userId);
+//        final String userId = loginInfo.getUsrId();
+//        List<WebSocketSession> webSocketSessionList = userSessionMap.get(userId);
 
-        if (webSocketSessionList == null) {
-            webSocketSessionList = new ArrayList<WebSocketSession>();
-            userSessionMap.put(userId, webSocketSessionList);
-        }
-        webSocketSessionList.add(session);
-        System.out.println("로그인 아이디 : " + userId);
+//        if (webSocketSessionList == null) {
+//            webSocketSessionList = new ArrayList<WebSocketSession>();
+//            userSessionMap.put(userId, webSocketSessionList);
+//        }
+//        webSocketSessionList.add(session);
+//        System.out.println("로그인 아이디 : " + userId);
     }
 
     @Override
-    protected void handleTextMessage(final WebSocketSession session, final TextMessage message) throws Exception {
-        final LoginInfoVO loginInfo = (LoginInfoVO) session.getAttributes().get(LoginInfoVO.LOGIN_INFO);
-
+    protected void handleTextMessage(final WebSocketSession sendSession, final TextMessage message) throws Exception {
         final String msg = message.getPayload();
-        logger.info("{}로 부터 {} 받음", loginInfo.getUsrId(), msg);
-        sendMeassage(message);
+        sessionList.stream()
+                .filter(session -> session.getId() != sendSession.getId())
+                .forEach(session -> {
+                    try {
+                        session.sendMessage(message);
+                    } catch (IOException e) {
+                        logger.error("메시지 전솔 실패");
+                    }
+                });
+//        sendMessage(session, message);
+    }
 
+    public static void broadcastMessage(String message) throws IOException {
+        TextMessage textMessage = new TextMessage(message);
+
+        for(final WebSocketSession session : sessionList) {
+            session.sendMessage(textMessage);
+        }
     }
 
     @Override
@@ -85,27 +98,36 @@ public class WebsocketHandler extends TextWebSocketHandler {
         logger.info("{} 연결 끊김", userId);
     }
 
-    public void sendMeassage(final TextMessage message) throws IOException {
-        try {
-            final String msg = message.getPayload();
-			final WebsocketMsgVO webSocketMsgVO = new Gson().fromJson(msg, WebsocketMsgVO.class);
+    public void sendMessage(final TextMessage message) throws IOException {
 
-            for(final String userId : webSocketMsgVO.getToUsers()){
-                final List<WebSocketSession> sessions = userSessionMap.get(userId);
-                for(final WebSocketSession sess : sessions){
-                    sess.sendMessage(message);
-				}
-            }
+        final String msg = message.getPayload();
+
+        for(final WebSocketSession session : sessionList) {
+            session.sendMessage(message);
         }
-        catch (final JsonParseException e) {
-            sendMeassage(message);
-            for (final WebSocketSession sess : sessionList) {
-                sess.sendMessage(new TextMessage(message.getPayload()));
-            }
-		}
+
+//            sessionList.stream().forEach(session -> {
+//                session.sendMessage();
+//                session.sendMessage(message);
+//            });
+//			final WebsocketMsgVO webSocketMsgVO = new Gson().fromJson(msg, WebsocketMsgVO.class);
+//
+//            for(final String userId : webSocketMsgVO.getToUsers()){
+//                final List<WebSocketSession> sessions = userSessionMap.get(userId);
+//                for(final WebSocketSession sess : sessions){
+//                    sess.sendMessage(message);
+//				}
+//            }
+//        }
+//        catch (final JsonParseException e) {
+//            sendMessage(message);
+//            for (final WebSocketSession sess : sessionList) {
+//                sess.sendMessage(new TextMessage(message.getPayload()));
+//            }
+//		}
     }
 
-    public void sendMeassage(WebsocketMsgVO webSocketMsgVO) throws IOException {
+    public void sendMessage(WebsocketMsgVO webSocketMsgVO) throws IOException {
 
         TextMessage msg = new TextMessage(webSocketMsgVO.getMsg());
 
