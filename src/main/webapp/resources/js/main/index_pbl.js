@@ -353,3 +353,169 @@ const evacuationRouteClick = (e) => {
 
     alert('대피경로 표출');
 }
+
+class AlarmPopup extends HTMLElement {
+
+    constructor(title) {
+        super().attachShadow({mode: 'open'});
+
+        this.setStyle();
+        this.render(title);
+    }
+
+    setStyle() {
+        const style = document.createElement('style');
+        style.textContent = `
+            :host {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                font-size: 16px; 
+                transform: translate(-50%, -50%);
+            }
+        .emergency-alert {
+            width: 25em;
+            height: 13.875em;
+            flex-shrink: 0;
+            border: 5px solid #D80004;
+            background: #350506;
+            display: flex;
+            flex-direction: column;
+            padding: 0 0 1em 0;
+        }
+        .alert-header {
+            background-color: #D80004;
+            color: white;
+            margin: 0;
+            padding: .75em;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1em;
+        }
+
+        .alert-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1em;
+        }
+
+        .alert-row > SPAN {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            color : #C9C9C9;
+            border-spacing: 1.25em 1em;
+        }
+
+        table th {
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .text-red {
+            color: #D80004;
+        }
+        .text-white {
+            color: #FFFFFF;
+        }
+
+        .button-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .alert-button {
+            width: 10em;
+            height: 2.75em;
+            padding: 0.625em 1.25em;
+            background: #3C6BF1;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+         @keyframes blink {
+              0% {
+                box-shadow: 0 0 10px 5px red;
+              }
+              50% {
+                box-shadow: 0 0 20px 10px red;
+              }
+              100% {
+                box-shadow: 0 0 10px 5px red;
+              }
+        }
+        
+        .blinking-border {
+          animation: blink 1s infinite;
+        }
+        `;
+
+        this.shadowRoot.appendChild(style);
+    }
+
+
+    connectedCallback() {
+    }
+
+
+    render(title) {
+
+        const fragments = document.createDocumentFragment();
+        const emergencyAlert = document.createElement('DIV');
+        emergencyAlert.classList.add('emergency-alert');
+        emergencyAlert.classList.add('blinking-border');
+        emergencyAlert.setAttribute('role', 'alert');
+
+        const date = new Date();
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        };
+
+        const formatter = new Intl.DateTimeFormat('ko-KR', options);
+
+        emergencyAlert.innerHTML = `
+              <h2 class="alert-header">${title}</h2>
+              
+              <div class="alert-content">
+                <table>
+                    <tr>
+                        <th class="alert-label">위치</th>
+                        <td class="alert-value text-red">${title}</td>
+                      </tr>
+                      <tr>
+                        <th class="alert-label">이벤트 등급</th>
+                        <td class="alert-value text-red">Critical</td>
+                      </tr>
+                      <tr>
+                        <th class="alert-label">발생 일시</th>
+                        <td class="alert-value text-white">${formatter.format(date)}</td>
+                      </tr>
+                </table>
+              </div>
+    
+              <div class="button-wrapper">
+                <button class="alert-button" tabindex="0">이벤트 확인</button>
+              </div>
+        `;
+
+        emergencyAlert.querySelector('BUTTON').addEventListener('click', ()=> {
+            this.remove();
+        })
+
+        fragments.appendChild(emergencyAlert);
+        this.shadowRoot.appendChild(fragments);
+    }
+
+}
+
+
+customElements.define('alarm-popup', AlarmPopup);
