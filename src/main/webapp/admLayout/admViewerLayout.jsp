@@ -33,6 +33,7 @@
 	<script src="<c:url value='/resources/js/cmn/validation.js' />"></script>
 	<script src="<c:url value='/resources/js/adm/sb-admin.min.js' />"></script>
 	<script src="<c:url value='/resources/js/adm/admin.js' />"></script>
+	<script src="<c:url value='/resources/js/adm/evacRoute/index.js' />"></script>
 	<script type="text/javascript" src="<c:url value="/resources/js/viewer/viewer.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/resources/js/lib/inflate.min.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/resources/js/lib/Px.Engine.js"/>"></script>

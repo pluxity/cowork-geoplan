@@ -350,8 +350,33 @@ const subClick = (e) => {
 
 const evacuationRouteClick = (e) => {
     const t = e.currentTarget;
+    if(t.classList.contains('on')) {
+        Px.Model.Collapse({
+            duration:10,
+            onComplete: () => {
+                Px.Evac.HideAll();
+                t.classList.remove('on');
+            }
+        });
 
-    alert('대피경로 표출');
+    } else {
+
+        const ulFloor = document.querySelector('UL.ul-floor');
+        const floorLi = ulFloor.querySelectorAll('LI');
+
+
+        Px.Model.Expand({
+            "duration":10,
+            "interval":10,
+            "name": "1",
+            "onComplete":()=>{
+                Px.Evac.ShowAll();
+                t.classList.add('on');
+            }});
+    }
+
+
+
 }
 
 class AlarmPopup extends HTMLElement {

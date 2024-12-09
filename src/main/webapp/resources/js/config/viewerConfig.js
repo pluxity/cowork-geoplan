@@ -10,6 +10,7 @@ const webglCallbacks = {
         Px.Util.Measure.SetSize(.1);
         Px.Topology.PathFinder.SetSize(0.1);
 
+        Px.Evac.LoadArrowTexture('/resources/img/evacRoute/arrow.png', function() {  });
     },
     beforeDeployPoi: (poi) => { // poi 등록전 커스터마이징
 
@@ -136,8 +137,16 @@ const webglCallbacks = {
             .then(res => res.json())
             .then(data => {
                 Px.PointMesh.SetPoints(data);
-            })
+            });
 
+        Px.PointMesh.LoadCountTextFont('/resources/css/webfonts/Open_Sans_Bold.json');
+
+        fetch(`/adm/evacRoute/getRoute.json?mapNo=${mapNo}`)
+            .then(res => res.json())
+            .then(data => {
+               Px.Evac.Import(data.result.routeJson);
+               Px.Evac.HideAll();
+            });
 
     },
     changePoiCategory1: (poiCategory1Nos) => {

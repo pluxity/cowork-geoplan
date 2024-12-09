@@ -111,6 +111,9 @@
 							<i class="fas fa-database"></i> DB에 저장</button>
 					</div>
 				</div>
+				<div class="tab-pane fade" id="evacRoute">
+					대피 경로
+				</div>
 			</div>
 		</div>
 		<!-- Sidebar -->

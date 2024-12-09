@@ -398,6 +398,13 @@ const changeFloorEvent = () => {
             if(document.querySelector('UL.mini_map_icon > LI.on[data-btn-type="transparent"]')) {
                 Px.Model.Transparent.SetAll(_OPACITY_TRANSPARENT_);
             }
+
+            if(floorGroupNo === 'all') {
+                Px.PointMesh.Show_AllFloorObject();
+            } else {
+                const floorName = event.currentTarget.querySelector('SPAN.txt').innerText;
+                Px.PointMesh.Show(floorName);
+            }
         });
     });
 }

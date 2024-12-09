@@ -31,8 +31,9 @@ $(function() {
 				}
 
 			} else if(btnType == "evacRouteToggle") { // 대피경로 토글
-				$(this).toggleClass("on");
-				if($(this).hasClass("on")) {
+
+				if(!$(this).hasClass("on")) {
+					activePoiCategory1No = [...document.querySelectorAll('#poiCategorySel input:checked')].map((input)=>input.value);
 					$('#poiCategorySel input').prop("checked", false);
 
 					//일단 강제 전체층 로드 poi는 굳이 로드 하지 않는다.
@@ -45,8 +46,9 @@ $(function() {
 					$('.evacRouteTool').show();
 					$('#floorSelect').hide();
 					sidbarDimm(true);
+					$(this).toggleClass("on");
+				} else if(confirm('대피경로 편집모드를 끄시겠습니까?')) {
 
-				} else {
 					evacRoute.clear();
 					modelCollapse();
 
@@ -57,6 +59,15 @@ $(function() {
 					evacRoute.btnFunction.drawEditor(false);
 					evacRoute.btnFunction.removePoint(false);
 					evacRoute.btnFunction.removeLink(false);
+					$(this).toggleClass("on");
+
+					if(activePoiCategory1No.length > 0) {
+						$('#poiCategorySel input').prop("checked", false);
+						activePoiCategory1No.forEach((category1No) => {
+							document.querySelector(`.poiCategory1No[value="${category1No}"]`).checked = true;
+							Px.Poi.ShowByGroup(parseInt(category1No, 10));
+						})
+					}
 				}
 			} else if (btnType === 'changeMode') {
 				const editTools = document.querySelectorAll('.edit-tools')

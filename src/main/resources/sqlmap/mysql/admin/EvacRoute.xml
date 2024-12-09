@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plx.app.admin.mapper.EvacRouteMapper">
+
+	<!-- 대피경로 -->
+	<resultMap type="evacRouteVO" id="rEvacRouteVO">
+		<result property="routeNo"		column="route_no" />
+		<result property="routeNm"		column="route_nm" />
+		<result property="mapNo"		column="map_no" />
+		<result property="routeJson"		column="route_json" />
+		<result property="fireJson"		column="fire_json" />
+		<result property="regUsr" 		column="reg_usr" />
+		<result property="regDt" 		column="reg_dt" />
+		<result property="updUsr" 		column="upd_usr" />
+		<result property="updDt" 		column="upd_dt" />
+	</resultMap>
+
+
+	<!-- 대피경로 가져오기 단일건 -->
+	<select id="selectEvacRoute" parameterType="evacRouteVO" resultMap="rEvacRouteVO">
+		SELECT * FROM TB_EVAC_ROUTE WHERE map_no = #{mapNo};
+	</select>
+
+	<!-- 대피경로 추가 -->
+	<insert id="insertEvacRoute" parameterType="evacRouteVO">
+		INSERT INTO TB_EVAC_ROUTE (
+			map_no,
+			route_nm,			
+			route_json,
+			fire_json,
+			reg_usr,
+			upd_usr
+		) VALUES (
+			#{mapNo},
+			#{routeNm},			
+			#{routeJson},
+			#{fireJson},
+			#{regUsr},
+			#{updUsr}
+		);
+
+	</insert>
+
+	<!-- 대피경로 update -->
+	<update id="updateEvacRoute" parameterType="evacRouteVO">
+		UPDATE TB_EVAC_ROUTE
+		SET 
+			<if test=' routeNm != null'> route_nm = #{routeNm}, </if>
+			<if test=' mapNo != null'> map_no = #{mapNo}, </if>
+			<if test=' routeJson != null'> route_json = #{routeJson}, </if>
+			<if test=' fireJson != null'> fire_json = #{fireJson}, </if>
+			<if test=' updUsr != null'> upd_usr = #{updUsr}, </if>
+			upd_dt=sysdate()
+		WHERE
+			map_no = #{mapNo}
+
+	</update>
+
+	<!-- 대피경로 upsert -->
+	<insert id="upsertEvacRoute" parameterType="evacRouteVO">
+		INSERT INTO TB_EVAC_ROUTE (
+			map_no,
+			route_nm,			
+			route_json,
+			fire_json,
+			reg_usr,
+			upd_usr,
+		) VALUES (
+			#{mapNo},
+			#{routeNm},			
+			#{routeJson},
+			#{fireJson},
+			#{regUsr},
+			#{updUsr}
+		) ON DUPLICATE KEY
+		UPDATE			
+			<if test=' routeNm != null'> route_nm = #{routeNm}, </if>			
+			<if test=' routeJson != null'> route_json = #{routeJson}, </if>
+			<if test=' fireJson != null'> fire_json = #{fireJson}, </if>
+			<if test=' updUsr != null'> upd_usr = #{updUsr}, </if>			
+			upd_dt = SYSDATE()
+	</insert>
+
+	<!-- 대피경로 삭제 -->
+	<delete id="deleteEvacRoute" parameterType="evacRouteVO">
+		DELETE FROM TB_EVAC_ROUTE
+		WHERE map_no = #{mapNo}
+	</delete>
+
+</mapper>

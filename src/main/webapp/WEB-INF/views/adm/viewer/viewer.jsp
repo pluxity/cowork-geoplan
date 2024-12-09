@@ -22,6 +22,16 @@
 			    	<button type="button" class="btn btn-dark btn-sm btnMapTool" title="1인칭시점" data-btn-type="viewLook"><i class="fas fa-street-view"></i></button>
 			    	<button type="button" class="btn btn-dark btn-sm btnMapTool" title="LOD설정" data-btn-type="lod">LOD</button>
 				</div>
+				<div id="evacRouteTool" class="rounded">
+					<button type="button" class="btn btn-dark btn-sm btnMapTool" title="대피경로" data-btn-type="evacRouteToggle"">대피경로</button>
+					<button type="button" class="btn btn-dark btn-sm evacRouteTool toggle" title="선 그리기" data-btn-type="drawEditor"">선 그리기</button>
+<%--					<button type="button" class="btn btn-dark btn-sm evacRouteTool" title="화재 그리기" data-btn-type="createFire">화재 그리기</button>--%>
+<%--					<button type="button" class="btn btn-dark btn-sm evacRouteTool" title="화재 제거" data-btn-type="removeFire"">화재 제거</button>--%>
+					<button type="button" class="btn btn-dark btn-sm evacRouteTool toggle" title="위치점 제거" data-btn-type="removePoint"">점 제거</button>
+					<button type="button" class="btn btn-dark btn-sm evacRouteTool toggle" title="연결 제거" data-btn-type="removeLink"">선 제거</button>
+					<button type="button" class="btn btn-dark btn-sm evacRouteTool" title="모두 제거" data-btn-type="clearRoute"">모두 제거</button>
+					<button type="button" class="btn btn-dark btn-sm evacRouteTool" title="저장" data-btn-type="saveRoute"">저장</button>
+				</div>
 			    <div id="poiEditTool" class="rounded edit-tools">
 					<button type="button" class="btn btn-dark btn-sm btnMapTool" title="POI편집" data-btn-type="edit">POI편집</button>
 					<button type="button" class="btn btn-dark btn-sm btnMapTool" title="POI이동" data-btn-type="translate"><i class="fas fa-crosshairs"></i></button>

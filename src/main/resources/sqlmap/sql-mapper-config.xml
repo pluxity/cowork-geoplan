@@ -23,6 +23,7 @@
     	<typeAlias alias="usrgrpMenuVO" type="com.plx.app.admin.vo.UsrgrpMenuVO"/>
 		<typeAlias alias="topologyInfoVO" type="com.plx.app.admin.vo.TopologyInfoVO"/>
 		<typeAlias alias="camPosVO" type="com.plx.app.admin.vo.CamPosVO"/>
+		<typeAlias alias="evacRouteVO" type="com.plx.app.admin.vo.EvacRouteVO"/>
 		<typeAlias alias="analyticsVO" type="com.plx.app.admin.vo.AnalyticsVO"/>
 
 		<typeAlias alias="systemInfoVO" type="com.plx.app.admin.vo.SystemInfoVO"/>

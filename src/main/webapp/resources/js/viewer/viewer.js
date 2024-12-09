@@ -520,7 +520,7 @@ var modelExpand = function (callback) {
 				// if(typeof(webglCallbacks.onComplete) === 'function') webglCallbacks.onComplete();
 			}
 	}
-	Px.Model.Expand(option);
+	// Px.Model.Expand(option);
 }
 
 var modelCollapse = function (callback) {
