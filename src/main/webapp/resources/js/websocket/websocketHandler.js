@@ -9,6 +9,9 @@ socket.onmessage = (event) => {
 
     if(data.location && data.id && data.floor) {
         Px.PointMesh.SetPoints(data);
+
+        renewPointMeshStatusByFloor(getCurrentFloorGroupNo());
+
     }
 
 };

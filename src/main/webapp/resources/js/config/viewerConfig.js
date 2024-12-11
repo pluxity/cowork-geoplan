@@ -138,7 +138,11 @@ const webglCallbacks = {
         fetch("/api/objects")
             .then(res => res.json())
             .then(data => {
-                const filteredData = data.filter((item) => item.floor);
+                // const filteredData = data.filter((item) => item.floor);
+                const filteredData = data.filter((item) => item["spaceId"]).map((item) => {
+                    item.floor = item["spaceId"];
+                    return item;
+                });
 
                 Px.PointMesh.SetPoints(filteredData);
                 Px.PointMesh.Show_AllFloorObject();
@@ -155,7 +159,7 @@ const webglCallbacks = {
                Px.Evac.Import(data.result.routeJson);
                Px.Evac.HideAll();
 
-                renewPointMeshStatus();
+                renewPointMeshStatusByFloor();
             });
 
     },
@@ -345,10 +349,15 @@ const config = {
     isDebug: false, // console.log를 통한 debuging 여부
 };
 
-const renewPointMeshStatus = () => {
+const renewPointMeshStatusByFloor = (floorGroupNo = 'all') => {
 
     const pointMeshStatus = Px.PointMesh.GetStatus();
-    document.getElementById('totalCount').innerText = pointMeshStatus.total;
-    document.getElementById('currentFloorCount').innerText = pointMeshStatus[`${floorGroupNo}`] ?? 0;
+    document.getElementById('totalCount').innerText = `${pointMeshStatus["floor"].total.length}` ?? "0";
+    document.getElementById('currentFloorCount').innerText = pointMeshStatus["floor"][`${floorGroupNo !== 'all' ? floorGroupNo : 'total'}`]?.length ?? "0";
 
+}
+
+const getCurrentFloorGroupNo = () => {
+    const currentFloorGroup = document.querySelector('.ul-floor > li.on');
+    return currentFloorGroup.dataset.floorGroupNo;
 }

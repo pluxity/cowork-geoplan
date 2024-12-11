@@ -407,7 +407,9 @@ const changeFloorEvent = () => {
                 Px.Model.Transparent.SetAll(_OPACITY_TRANSPARENT_);
             }
 
+
             if(floorGroupNo === 'all') {
+                Px.PointMesh.ShowPointAll();
                 Px.PointMesh.Show_AllFloorObject();
                 Array.from(floorList).filter((floor) => floor.dataset.floorGroupNo !== 'all')
                     .forEach((floor) => {
@@ -415,11 +417,15 @@ const changeFloorEvent = () => {
                     }
                 );
             } else {
+
+                Px.PointMesh.HidePointAll();
+                Px.PointMesh.ShowPoint(floorGroupNo);
+
                 Px.PointMesh.Show(floorGroupNo);
                 Px.PointMesh.Hide_AllFloorObject();
             }
 
-            renewPointMeshStatus();
+            renewPointMeshStatusByFloor(floorGroupNo);
 
         });
     });
