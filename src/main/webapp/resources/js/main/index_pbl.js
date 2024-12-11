@@ -350,6 +350,9 @@ const subClick = (e) => {
 
 const evacuationRouteClick = (e) => {
     const t = e.currentTarget;
+
+    document.querySelector('.ul-floor > [data-floor-group-no="all"]').dispatchEvent(new Event('click'));
+
     if(t.classList.contains('on')) {
         Px.Model.Collapse({
             duration:10,
@@ -364,7 +367,6 @@ const evacuationRouteClick = (e) => {
         const ulFloor = document.querySelector('UL.ul-floor');
         const floorLi = ulFloor.querySelectorAll('LI');
 
-
         Px.Model.Expand({
             "duration":10,
             "interval":10,
@@ -372,10 +374,23 @@ const evacuationRouteClick = (e) => {
             "onComplete":()=>{
                 Px.Evac.ShowAll();
                 t.classList.add('on');
+
             }});
     }
+}
 
+const onPointEnterAlarmAreaCallback = (data) => {
 
+    console.log(data);
+    document.querySelector('BODY').appendChild(new AlarmPopup(data.title));
+
+}
+
+const onPointExitAlarmAreaCallback = (data) => {
+
+    console.log(data);
+
+    // TODO 알람 삭제?
 
 }
 

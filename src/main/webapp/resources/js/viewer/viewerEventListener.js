@@ -391,7 +391,15 @@ const changeFloorEvent = () => {
     const floorList = document.querySelectorAll('.ul-floor>li');
     floorList.forEach((floor) => {
         floor.addEventListener('click', (event) => {
+
             const { floorGroupNo } = event.currentTarget.dataset;
+
+            if(document.getElementById('btnEvacuationRoute').classList.contains('on')
+                && floorGroupNo !== 'all') {
+                alert('대피경로를 종료해주세요.');
+                return;
+            }
+
             toggleFloorBtn(floorGroupNo);
             changeFloor(floorGroupNo);
 
@@ -401,10 +409,18 @@ const changeFloorEvent = () => {
 
             if(floorGroupNo === 'all') {
                 Px.PointMesh.Show_AllFloorObject();
+                Array.from(floorList).filter((floor) => floor.dataset.floorGroupNo !== 'all')
+                    .forEach((floor) => {
+                        Px.PointMesh.Hide(`${floor.dataset.floorGroupNo}`);
+                    }
+                );
             } else {
-                const floorName = event.currentTarget.querySelector('SPAN.txt').innerText;
-                Px.PointMesh.Show(floorName);
+                Px.PointMesh.Show(floorGroupNo);
+                Px.PointMesh.Hide_AllFloorObject();
             }
+
+            renewPointMeshStatus();
+
         });
     });
 }

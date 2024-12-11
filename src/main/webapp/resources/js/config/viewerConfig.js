@@ -133,19 +133,29 @@ const webglCallbacks = {
 
         Px.Camera.EnableScreenPanning();
 
+        Px.PointMesh.LoadCountTextFont('/resources/css/webfonts/Open_Sans_Bold.json');
+
         fetch("/api/objects")
             .then(res => res.json())
             .then(data => {
-                Px.PointMesh.SetPoints(data);
+                const filteredData = data.filter((item) => item.floor);
+
+                Px.PointMesh.SetPoints(filteredData);
+                Px.PointMesh.Show_AllFloorObject();
             });
 
-        Px.PointMesh.LoadCountTextFont('/resources/css/webfonts/Open_Sans_Bold.json');
+        Px.PointMesh.AddEventListener('onPointEnterAlarmArea', onPointEnterAlarmAreaCallback);
+        Px.PointMesh.AddEventListener('onPointExitAlarmArea', onPointExitAlarmAreaCallback);
+
+
 
         fetch(`/adm/evacRoute/getRoute.json?mapNo=${mapNo}`)
             .then(res => res.json())
             .then(data => {
                Px.Evac.Import(data.result.routeJson);
                Px.Evac.HideAll();
+
+                renewPointMeshStatus();
             });
 
     },
@@ -334,3 +344,11 @@ const config = {
     useFireEffect: false, // 화재효과 사용 여부
     isDebug: false, // console.log를 통한 debuging 여부
 };
+
+const renewPointMeshStatus = () => {
+
+    const pointMeshStatus = Px.PointMesh.GetStatus();
+    document.getElementById('totalCount').innerText = pointMeshStatus.total;
+    document.getElementById('currentFloorCount').innerText = pointMeshStatus[`${floorGroupNo}`] ?? 0;
+
+}

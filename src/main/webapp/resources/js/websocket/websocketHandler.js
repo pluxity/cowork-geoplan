@@ -7,7 +7,7 @@ socket.onopen = () => {
 socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
-    if(data.location && data.id) {
+    if(data.location && data.id && data.floor) {
         Px.PointMesh.SetPoints(data);
     }
 
