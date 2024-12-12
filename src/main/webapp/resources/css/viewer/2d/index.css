@@ -322,7 +322,7 @@ body{
     align-items: center;
 }
 
-.poi_box, 
+.poi_box, .area_box,
 .content-box {
     position: absolute;
     bottom: 40px;
@@ -365,7 +365,7 @@ body{
     background-size:contain;
     cursor: pointer;    
 }
-:is(.poi_box, .content-box) ul > li {
+:is(.poi_box, .area_box, .content-box) ul > li {
     display:flex;
     align-items:center;
     padding:0 1.6em;
@@ -373,17 +373,17 @@ body{
     background:#ffffff;
     border-bottom: 1px solid #DADBE3;
 }
-:is(.poi_box, .content-box) ul > li:last-child {
+:is(.poi_box, .area_box, .content-box) ul > li:last-child {
     border-bottom:none;
 }
-:is(.poi_box, .content-box) ul > li > span {
+:is(.poi_box, .area_box, .content-box) ul > li > span {
     font-size: .8rem;
     color:#6C6B71;
 }
-:is(.poi_box, .content-box) ul > li > span > SUP {
+:is(.poi_box, .area_box, .content-box) ul > li > span > SUP {
     font-size: .5em;
 }
-:is(.poi_box, .content-box) ul > li > span.tit {
+:is(.poi_box, .area_box, .content-box) ul > li > span.tit {
     padding-right:8px;
 }
 

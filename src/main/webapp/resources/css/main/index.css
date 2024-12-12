@@ -1317,7 +1317,12 @@
     /*display:block;*/
 
 }
-DIV:is(.poi_box, .popup_layer__measure)  {
+
+.area_box {
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+DIV:is(.poi_box, .area_box, .popup_layer__measure)  {
     /*display:none;*/
     position:absolute;
     top:50%;
@@ -1334,7 +1339,7 @@ DIV:is(.poi_box, .popup_layer__measure)  {
 DIV.popup_layer__measure {
     min-width:10rem !important;
 }
-DIV:is(.poi_box, .popup_layer__measure) .header-tit {
+DIV:is(.poi_box, .area_box, .popup_layer__measure) .header-tit {
     display:flex;
     align-items:center;
     justify-content: space-between;
@@ -1343,18 +1348,18 @@ DIV:is(.poi_box, .popup_layer__measure) .header-tit {
     background: linear-gradient(0deg, #DADBE3, #DADBE3);
 
 }
-DIV:is(.poi_box, .popup_layer__measure) .header-tit .txt {
+DIV:is(.poi_box, .area_box, .popup_layer__measure) .header-tit .txt {
     font-size: 1.6em;
     color:#3C55A5;
 }
-DIV:is(.poi_box, .popup_layer__measure) .header-tit .close {
+DIV:is(.poi_box, .area_box, .popup_layer__measure) .header-tit .close {
     width:2.4em;
     height:100%;
     background:url('/resources/img/icon/close/inactive.png')center no-repeat;
     background-size:contain;
     cursor: pointer;    
 }
-DIV:is(.poi_box, .popup_layer__measure) ul > li {
+DIV:is(.poi_box, .area_box, .popup_layer__measure) ul > li {
     display:flex;
     align-items:center;
     padding:0 1.6em;
@@ -1362,17 +1367,17 @@ DIV:is(.poi_box, .popup_layer__measure) ul > li {
     background:#ffffff;
     border-bottom: 1px solid #DADBE3;
 }
-DIV:is(.poi_box, .popup_layer__measure) ul > li:last-child {
+DIV:is(.poi_box, .area_box, .popup_layer__measure) ul > li:last-child {
     border-bottom:none;
 }
-DIV:is(.poi_box, .popup_layer__measure) ul > li > span {
+DIV:is(.poi_box, .area_box, .popup_layer__measure) ul > li > span {
     font-size: 1.4rem;
     color:#6C6B71;
 }
-DIV:is(.poi_box, .popup_layer__measure) ul > li > span > SUP {
+DIV:is(.poi_box, .area_box, .popup_layer__measure) ul > li > span > SUP {
     font-size: .5em;
 }
-DIV:is(.poi_box, .popup_layer__measure) ul > li > span.tit {
+DIV:is(.poi_box, .area_box, .popup_layer__measure) ul > li > span.tit {
     padding-right:8px;
 }
 DIV:is(.popup_layer__measure) ul > li > span.value {
@@ -1406,7 +1411,7 @@ DIV:is(.popup_layer__measure) ul > li > button {
     .search_wrap .search,
     .right_btn_wrap,
     .right_btn_wrap .floor_wrap .btn_all,
-    .poi_box,
+    .poi_box, .area_box,
     .popup_layer__measure,
     .left_btn_wrap .btn_map_wrap .list .customer-type .radio-wrap > span > input,
     .right_btn_wrap .floor_wrap .ul-floor 
@@ -1425,7 +1430,7 @@ DIV:is(.popup_layer__measure) ul > li > button {
     .search_wrap .search,
     .right_btn_wrap,
     .right_btn_wrap .floor_wrap .btn_all,
-    .poi_box,
+    .poi_box, .area_box,
     .popup_layer__measure,
     .left_btn_wrap .btn_map_wrap .list .customer-type .radio-wrap > span > input,
     .right_btn_wrap .floor_wrap .ul-floor

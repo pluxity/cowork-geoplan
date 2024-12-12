@@ -151,13 +151,61 @@ const webglCallbacks = {
         Px.PointMesh.AddEventListener('onPointEnterAlarmArea', onPointEnterAlarmAreaCallback);
         Px.PointMesh.AddEventListener('onPointExitAlarmArea', onPointExitAlarmAreaCallback);
 
+        Px.PointMesh.AddEventListener('onAreaClick', (data)=> {
+
+            document.querySelector('.area_box')?.remove();
+
+            const { type, area_name, points_in_area } = data;
+
+            const areaBox = document.createElement('DIV');
+            areaBox.className = 'area_box';
+
+            const headerTit = document.createElement('P');
+            headerTit.className = 'header-tit';
+            headerTit.innerHTML = `<span class="txt">${area_name}</span>
+                    <span class="close"></span>`;
+
+            areaBox.appendChild(headerTit);
+            areaBox.querySelector('.close').addEventListener('click', () => {
+                document.querySelector('.area_box').remove();
+            })
+
+
+            const tagList = document.createElement('UL');
+
+            if(points_in_area.length < 1) {
+                tagList.innerHTML = `<li><span>해당 공간에는 아무도 없습니다.</span></li>`;
+            } else {
+                for(const point of points_in_area) {
+                    tagList.innerHTML +=
+                        `<li>
+                            <span class="tit">이름 : </span>
+                            <span class="txt">${point.displayName}</span>
+                            <span>&nbsp;/&nbsp;</span>
+                            <span class="tit">태그 : </span>
+                            <span class="txt">${point.id}</span>
+                        </li>`;
+
+                }
+
+
+            }
+
+            areaBox.appendChild(tagList);
+
+            document.querySelector('BODY').appendChild(areaBox);
+
+        });
 
 
         fetch(`/adm/evacRoute/getRoute.json?mapNo=${mapNo}`)
             .then(res => res.json())
             .then(data => {
-               Px.Evac.Import(data.result.routeJson);
-               Px.Evac.HideAll();
+                if(data.result == null) {
+                    return;
+                }
+                Px.Evac.Import(data.result.routeJson);
+                Px.Evac.HideAll();
 
                 renewPointMeshStatusByFloor();
             });
