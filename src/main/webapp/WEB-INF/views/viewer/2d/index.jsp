@@ -66,15 +66,15 @@
         </div>
     </div>
     <div id="footer">
-        <div id="footerMapNm">경남도청</div>
-        <div id="footerAddress" class="footer-data">
-            <img src="/resources/img/icon/map/map-pin.png" />
-            <span class="txt">주소 경상남도 창원시 의창구 중앙대로 300 (우 51154)</span>
-        </div>
-        <div id="footerPhone" class="footer-data">
-            <img src="/resources/img/icon/map/phone.png"/>
-            <span class="txt">대표전화 055-211-2114</span>
-        </div>
+<%--        <div id="footerMapNm">경남도청</div>--%>
+<%--        <div id="footerAddress" class="footer-data">--%>
+<%--            <img src="/resources/img/icon/map/map-pin.png" />--%>
+<%--            <span class="txt">주소 경상남도 창원시 의창구 중앙대로 300 (우 51154)</span>--%>
+<%--        </div>--%>
+<%--        <div id="footerPhone" class="footer-data">--%>
+<%--            <img src="/resources/img/icon/map/phone.png"/>--%>
+<%--            <span class="txt">대표전화 055-211-2114</span>--%>
+<%--        </div>--%>
     </div>
 
     <template id="coordEmptyPopup">

@@ -52,8 +52,9 @@ public class GeoLocationService {
         String id = dto.getId();
         String location = dto.getLocation();
         String floor = dto.getFloor();
+        String buildingCode = dto.getBuildingCode();
 
-        if(StringUtils.isAnyBlank(id, location, floor)) {
+        if(StringUtils.isAnyBlank(id, buildingCode, location, floor)) {
             throw new RuntimeException("필수 파라미터 누락");
         }
 

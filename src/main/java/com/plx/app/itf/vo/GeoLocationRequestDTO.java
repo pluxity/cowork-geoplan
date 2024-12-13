@@ -9,6 +9,7 @@ public class GeoLocationRequestDTO {
 
     String apikey;
     String id;
+    String buildingCode;
     String location;
     String floor;
     String name;
