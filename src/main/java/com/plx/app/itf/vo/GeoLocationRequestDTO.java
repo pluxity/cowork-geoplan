@@ -1,5 +1,6 @@
 package com.plx.app.itf.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -9,7 +10,10 @@ public class GeoLocationRequestDTO {
 
     String apikey;
     String id;
+
+    @JsonProperty("building_code")
     String buildingCode;
+
     String location;
     String floor;
     String name;
