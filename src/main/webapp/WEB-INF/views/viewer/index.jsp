@@ -181,8 +181,9 @@
                         </div>
                     </div>
 
-                    <div class="evacuation-route-wrap">
-                        <button id="btnEvacuationRoute">대피 경로</button>
+                    <div class="function-buttons-wrap">
+                        <button id="btnEvacuationRoute" title="대피경로"></button>
+                        <button id="btnLocator" title="태그 게이트웨이"></button>
                     </div>
 
                     <div class="mini_map_wrap">

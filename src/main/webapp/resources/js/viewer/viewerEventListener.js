@@ -407,22 +407,24 @@ const changeFloorEvent = () => {
                 Px.Model.Transparent.SetAll(_OPACITY_TRANSPARENT_);
             }
 
+            checkLocator(undefined, floorGroupNo);
+
 
             if(floorGroupNo === 'all') {
-                Px.PointMesh.ShowPointAll();
-                Px.PointMesh.Show_AllFloorObject();
-                Array.from(floorList).filter((floor) => floor.dataset.floorGroupNo !== 'all')
-                    .forEach((floor) => {
-                        Px.PointMesh.Hide(`${floor.dataset.floorGroupNo}`);
-                    }
-                );
+                // Px.PointMesh.ShowPointAll();
+                // Px.PointMesh.Show_AllFloorObject();
+                // Array.from(floorList).filter((floor) => floor.dataset.floorGroupNo !== 'all')
+                //     .forEach((floor) => {
+                //         Px.PointMesh.Hide(`${floor.dataset.floorGroupNo}`);
+                //     }
+                // );
             } else {
 
                 Px.PointMesh.HidePointAll();
                 Px.PointMesh.ShowPoint(floorGroupNo);
 
-                Px.PointMesh.Show(floorGroupNo);
-                Px.PointMesh.Hide_AllFloorObject();
+                // Px.PointMesh.Show(floorGroupNo);
+                // Px.PointMesh.Hide_AllFloorObject();
             }
 
             renewPointMeshStatusByFloor(floorGroupNo);

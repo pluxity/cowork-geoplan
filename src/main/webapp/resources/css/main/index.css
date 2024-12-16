@@ -1297,20 +1297,49 @@
     font-size: 1.8rem;
 }
 
-#btnEvacuationRoute {
-    background-color: #FFFFFF;
-    border: 1px solid #3C55A5;
+.function-buttons-wrap {
+    position: fixed;
+    right: 5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+}
+
+.function-buttons-wrap > BUTTON {
+    width: 5rem;
+    height: 5rem;
     color: #3C55A5;
-    width: 100%;
-    height: 100%;
     font-size: 1.4rem;
-    padding: .5rem 2rem;
     cursor: pointer;
+    border-radius: 50%;
+    border: none;
+    background-color: #FFFFFF;
+    background-repeat: no-repeat;
+    background-position: center;
+    box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, .1)
+}
+
+.function-buttons-wrap > BUTTON.on {
+    background-color: #3C68F1;
+}
+
+#btnEvacuationRoute {
+    background-image: url('/resources/img/icon/btnicon/evacutation.svg');
 }
 
 #btnEvacuationRoute.on {
-    background-color: #3C55A5;
-    color: #FFFFFF;
+    background-image: url('/resources/img/icon/btnicon/evacutation_on.svg');
+}
+
+#btnLocator {
+    background-image: url('/resources/img/icon/btnicon/locator.svg');
+}
+
+#btnLocator.on {
+    background-image: url('/resources/img/icon/btnicon/locator_on.svg');
 }
 
 .poi_box.on  {

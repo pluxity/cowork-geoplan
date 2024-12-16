@@ -176,6 +176,8 @@ window.addEventListener('load', function(){
 
 
     document.getElementById('btnEvacuationRoute').addEventListener('click', evacuationRouteClick);
+    document.getElementById('btnLocator').addEventListener('click', locatorClick);
+
     
 });
 
@@ -353,6 +355,10 @@ const evacuationRouteClick = (e) => {
 
     document.querySelector('.ul-floor > [data-floor-group-no="all"]').dispatchEvent(new Event('click'));
 
+    if(document.getElementById('btnLocator').classList.contains('on')) {
+        document.getElementById('btnLocator').dispatchEvent(new Event('click'));
+    }
+
     if(t.classList.contains('on')) {
         Px.Model.Collapse({
             duration:10,
@@ -379,9 +385,43 @@ const evacuationRouteClick = (e) => {
     }
 }
 
+const locatorClick = (e) => {
+
+    if(document.getElementById('btnEvacuationRoute').classList.contains('on')) {
+        alert('대피경로 종료 후 사용해주세요.');
+        return;
+    }
+
+    const t = e.currentTarget;
+    t.classList.toggle('on');
+
+    checkLocator(t.classList.contains('on'));
+
+    // const onFloor = document.querySelector('.ul-floor > LI.on');
+    // const currentFloor = onFloor.dataset.floorGroupNo;
+    //
+    // if(t.classList.contains('on')) {
+    //     currentFloor === 'all' ? Px.PointMesh.Show_AllFloorObject() : Px.PointMesh.Show(currentFloor);
+    // } else {
+    //     currentFloor === 'all' ? Px.PointMesh.Hide_AllFloorObject() : Px.PointMesh.Hide(currentFloor);
+    // }
+}
+
+const checkLocator = (locatorStatus = document.getElementById('btnLocator').classList.contains('on'),
+                      floorGroupNo = document.querySelector('.ul-floor > LI.on').dataset.floorGroupNo) => {
+
+    if(locatorStatus) {
+        floorGroupNo === 'all' ? Px.PointMesh.Show_AllFloorObject() : Px.PointMesh.Show(floorGroupNo);
+    } else {
+        floorGroupNo === 'all' ? Px.PointMesh.Hide_AllFloorObject() : Px.PointMesh.Hide(floorGroupNo);
+    }
+
+}
+
+
+
 const onPointEnterAlarmAreaCallback = (data) => {
 
-    console.log(data);
     document.querySelector('BODY').appendChild(new AlarmPopup(data.title));
 
 }
