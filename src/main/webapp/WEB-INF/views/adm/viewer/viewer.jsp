@@ -40,7 +40,7 @@
 				</div>
 				<div id="topoEditTool" class="rounded edit-tools d-none">
 					<button type="button" class="btn btn-radio btn-dark btn-sm btnMapTool topo-node" title="노드생성" data-act-type="addNode">노드생성</button>
-					<button type="button" class="btn btn-radio btn-dark btn-sm btnMapTool topo-node" title="노드이동" data-act-type="moveNode">노드이동</button>
+<%--					<button type="button" class="btn btn-radio btn-dark btn-sm btnMapTool topo-node" title="노드이동" data-act-type="moveNode">노드이동</button>--%>
 					<button type="button" class="btn btn-radio btn-dark btn-sm btnMapTool" title="링크생성" data-act-type="onewayLink">단방향링크</button>
 					<button type="button" class="btn btn-radio btn-dark btn-sm btnMapTool" title="링크생성" data-act-type="twowayLink">양방향링크</button>
 					<button type="button" class="btn btn-radio btn-dark btn-sm btnMapTool" title="삭제" data-act-type="delNode">노드, 링크삭제</button>

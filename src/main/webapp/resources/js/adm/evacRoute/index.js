@@ -56,8 +56,8 @@ evacRoute.loadRoute = function () {  //초기화
                 //경로처리
                 Px.Evac.Import(result.routeJson);
                 //불효과 처리
-                var fireDatas = JSON.parse(result.fireJson);
-                fireEffect.setFireByCoordinate(fireDatas);
+                // var fireDatas = JSON.parse(result.fireJson);
+                // fireEffect.setFireByCoordinate(fireDatas);
             }
 
             Px.Model.Expand({

@@ -123,7 +123,7 @@ $(function() {
 			jThis.siblings().removeClass('on');
 			if(jThis.hasClass('on')) {
 				jThis.removeClass('on');
-				Px.Topology.Data.StopEditting();
+				Px.Topology.Data.Cancel();
 
 				return;
 			}
@@ -221,7 +221,7 @@ $(function() {
 	});
 	
 	$('#floorNo1').change(function () {
-		Px.Topology.Data.StopEditting();
+		Px.Topology.Data.Cancel();
 		Px.Topology.Data.HideAll();
 
 		const actType = $('#topoEditTool > BUTTON.on').data('actType');
@@ -711,23 +711,28 @@ $(function() {
 function setNodeAct(actType) {
 	switch (actType) {
 		case 'addNode' : {
-			Px.Topology.Data.CreateNode();
+			// Px.Topology.Data.CreateNode();
+			Px.Topology.Data.CreatePoint();
 			break;
 		}
 		case 'moveNode' : {
-			Px.Topology.Data.MoveNode();
+			// Px.Topology.Data.MoveNode();
+			Px.Topology.Data.MoveObject()
 			break;
 		}
 		case 'delNode' : {
-			Px.Topology.Data.Remove();
+			// Px.Topology.Data.Remove();
+			Px.Topology.Data.DeleteObjectPointer()
 			break;
 		}
 		case 'onewayLink' : {
-			Px.Topology.Data.Connect('oneway');
+			// Px.Topology.Data.Connect('oneway');
+			Px.Topology.Data.ConnectLinkOneway()
 			break;
 		}
 		case 'twowayLink' : {
-			Px.Topology.Data.Connect('twoway');
+			// Px.Topology.Data.Connect('twoway');
+			Px.Topology.Data.ConnectLinkTwoway()
 			break;
 		}
 		default : {
@@ -1198,7 +1203,7 @@ const selectTopoType = async (type) => {
 }
 
 const nodeButtonActive = () => {
-	Px.Topology.Data.StopEditting();
+	Px.Topology.Data.Cancel();
 	const floorNo2 = document.querySelector('#floorNo2').value;
 	const nodeButtons = document.querySelectorAll('.topo-node');
 	

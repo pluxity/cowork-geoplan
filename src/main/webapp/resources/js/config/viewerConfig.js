@@ -135,18 +135,18 @@ const webglCallbacks = {
 
         Px.PointMesh.LoadCountTextFont('/resources/css/webfonts/Open_Sans_Bold.json');
 
-        fetch("/api/objects")
-            .then(res => res.json())
-            .then(data => {
-                // const filteredData = data.filter((item) => item.floor);
-                const filteredData = data.filter((item) => item["spaceId"]).map((item) => {
-                    item.floor = item["spaceId"];
-                    return item;
-                });
-
-                Px.PointMesh.SetPoints(filteredData);
-                Px.PointMesh.Show_AllFloorObject();
-            });
+        // fetch("/api/objects")
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         // const filteredData = data.filter((item) => item.floor);
+        //         const filteredData = data.filter((item) => item["spaceId"]).map((item) => {
+        //             item.floor = item["spaceId"];
+        //             return item;
+        //         });
+        //
+        //         Px.PointMesh.SetPoints(filteredData);
+        //         Px.PointMesh.Show_AllFloorObject();
+        //     });
 
         Px.PointMesh.AddEventListener('onPointEnterAlarmArea', onPointEnterAlarmAreaCallback);
         Px.PointMesh.AddEventListener('onPointExitAlarmArea', onPointExitAlarmAreaCallback);
@@ -407,5 +407,5 @@ const renewPointMeshStatusByFloor = (floorGroupNo = 'all') => {
 
 const getCurrentFloorGroupNo = () => {
     const currentFloorGroup = document.querySelector('.ul-floor > li.on');
-    return currentFloorGroup.dataset.floorGroupNo;
+    return currentFloorGroup?.dataset.floorGroupNo ?? 'all';
 }
