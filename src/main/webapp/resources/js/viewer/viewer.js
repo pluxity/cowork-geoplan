@@ -229,7 +229,7 @@ function initMap() {
 
 		camPos.changeCamPos('all');
 
-		Px.Topology.Data.SetSize(0.2);
+		Px.Topology.Data.SetSize(0.5);
 
 	}, function() {
 		console.error('WebGL 초기화 실패');

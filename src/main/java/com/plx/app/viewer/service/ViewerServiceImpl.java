@@ -1,10 +1,14 @@
 package com.plx.app.viewer.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.plx.app.admin.vo.UsrgrpMapVO;
 import com.plx.app.viewer.mapper.ViewerMapper;
+import com.plx.app.viewer.vo.AlarmRequestDTO;
+import com.plx.app.viewer.vo.AlarmResponseDTO;
 import com.plx.app.viewer.vo.ViewerPOIInfoVO;
 
 import org.springframework.stereotype.Service;
@@ -43,6 +47,16 @@ public class ViewerServiceImpl implements ViewerService {
 	@Override
 	public List<UsrgrpMapVO> selectMapList(UsrgrpMapVO pUsrgrpMapVO) throws Exception {
 		return viewerMapper.selectMapList(pUsrgrpMapVO);
+	}
+
+	@Override
+	public void saveAlarm(AlarmRequestDTO dto) throws Exception {
+		viewerMapper.saveAlarm(dto);
+	}
+
+	@Override
+	public List<AlarmResponseDTO> getAlarms(Map<String, Object> params) throws Exception {
+		return viewerMapper.getAlarms(params);
 	}
 
 }

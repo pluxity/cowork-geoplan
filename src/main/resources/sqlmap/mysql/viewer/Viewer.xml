@@ -21,6 +21,15 @@
 		<result property="lng" 			column="lng" />
 	</resultMap>
 
+	<resultMap id="alarmResponseDTO" type="com.plx.app.viewer.vo.AlarmResponseDTO">
+		<id property="id" column="id"/>
+		<result property="mapNo" column="map_no"/>
+		<result property="areaName" column="area_name"/>
+		<result property="tagId" column="tag_id"/>
+		<result property="displayName" column="display_name"/>
+		<result property="regDt" column="reg_dt"/>
+	</resultMap>
+
 	<!-- POI QUERY -->
 	<sql id="poiDeviceSql">
 		SELECT
@@ -140,5 +149,29 @@
 		    ugm.map_no
 		ORDER BY
 		    ugm.map_no
+	</select>
+
+	<insert id="saveAlarm" parameterType="alarmRequestDTO">
+		INSERT INTO tb_alarm_hst (map_no, area_name, tag_id, display_name)
+		VALUES (
+		        #{mapNo},
+		        #{areaName},
+		        #{tagId},
+		        #{displayName}
+	   )
+	</insert>
+	<select id="getAlarms" parameterType="java.util.HashMap" resultMap="alarmResponseDTO">
+		SELECT
+		    id,
+		    map_no,
+		    area_name,
+		    tag_id,
+		    display_name,
+		    reg_dt
+		FROM
+		    tb_alarm_hst
+		<where>
+			<if test='mapNo != null and mapNo != ""'>AND map_no = #{mapNo}</if>
+		</where>
 	</select>
 </mapper>

@@ -24,12 +24,11 @@ import com.plx.app.admin.vo.TopologyInfoVO;
 import com.plx.app.cmn.controller.BaseController;
 import com.plx.app.security.SecurityUtils;
 import com.plx.app.viewer.service.ViewerService;
+import com.plx.app.viewer.vo.AlarmRequestDTO;
+import com.plx.app.viewer.vo.AlarmResponseDTO;
 import com.plx.app.viewer.vo.ViewerPOIInfoVO;
 
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -435,6 +434,58 @@ public class ViewerApiController extends BaseController {
 		try {
 			pTopologyInfoVO = topologyInfoService.selectTopologyInfo(pTopologyInfoVO);
 			resultMap.put("result", pTopologyInfoVO);
+		} catch(SQLException se) {
+			resultCd = "fail";
+			resultMsg = messageSourceAccessor.getMessage("search.fail");
+			logger_error.error("SQLException", se);
+		} catch(Exception e) {
+			resultCd = "fail";
+			resultMsg = messageSourceAccessor.getMessage("search.fail");
+			logger_error.error("Exception", e);
+		}
+
+		resultMap.put("resultCd", resultCd);
+		resultMap.put("resultMsg", resultMsg);
+
+		return resultMap;
+	}
+
+	@PostMapping("/alarms")
+	@ResponseBody
+	public Map<String, Object> postAlarm(@RequestBody AlarmRequestDTO dto) throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		String resultCd = "success";
+		String resultMsg = messageSourceAccessor.getMessage("save.success");
+
+		try {
+			viewerService.saveAlarm(dto);
+		} catch(SQLException se) {
+			resultCd = "fail";
+			resultMsg = messageSourceAccessor.getMessage("save.fail");
+			logger_error.error("SQLException", se);
+		} catch(Exception e) {
+			resultCd = "fail";
+			resultMsg = messageSourceAccessor.getMessage("save.fail");
+			logger_error.error("Exception", e);
+		}
+
+		resultMap.put("resultCd", resultCd);
+		resultMap.put("resultMsg", resultMsg);
+
+		return resultMap;
+	}
+
+	@GetMapping("/alarms")
+	@ResponseBody
+	public Map<String, Object> getAlarms() {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		String resultCd = "success";
+		String resultMsg = messageSourceAccessor.getMessage("search.success");
+
+		Map<String, Object> params = new HashMap<>();
+		try {
+			List<AlarmResponseDTO> list = viewerService.getAlarms(params);
+			resultMap.put("result", list);
 		} catch(SQLException se) {
 			resultCd = "fail";
 			resultMsg = messageSourceAccessor.getMessage("search.fail");

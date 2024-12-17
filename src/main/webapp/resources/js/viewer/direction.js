@@ -28,7 +28,6 @@ class Direction {
     async init() {
         const tMap = await this.getTopologyList();
         if(!tMap) {
-            alert('TOPO 데이터 가져오기 실패');
             return false;
         }
 

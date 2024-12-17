@@ -29,6 +29,7 @@
 		<typeAlias alias="systemInfoVO" type="com.plx.app.admin.vo.SystemInfoVO"/>
 		
 		<typeAlias alias="viewerPOIInfoVO" type="com.plx.app.viewer.vo.ViewerPOIInfoVO"/>
+		<typeAlias alias="alarmRequestDTO" type="com.plx.app.viewer.vo.AlarmRequestDTO"/>
 
 	
     </typeAliases>

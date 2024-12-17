@@ -48,7 +48,7 @@ evacRoute.upsert = function (param, callback) { // 루트upsert
 
 evacRoute.loadRoute = function () {  //초기화
 
-    Px.Evac.SetSize(2);
+    Px.Evac.SetSize(0.5);
     Px.Evac.LoadArrowTexture('/resources/img/evacRoute/arrow.png', function () {
         evacRoute.getRoute({mapNo: mapNo}, function (result) {
 

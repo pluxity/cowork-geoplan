@@ -422,7 +422,37 @@ const checkLocator = (locatorStatus = document.getElementById('btnLocator').clas
 
 const onPointEnterAlarmAreaCallback = (data) => {
 
-    document.querySelector('BODY').appendChild(new AlarmPopup(data.title));
+    const title = data["area_name"];
+    const tagId = data["pointId"];
+    document.querySelector('BODY').appendChild(new AlarmPopup(title, tagId));
+
+    const body = {
+        "mapNo": mapNo,
+        "areaName": data["area_name"],
+        "tagId": data["pointId"],
+        "displayName": data.pointData["displayName"]
+    }
+
+    fetch("/api/viewer/alarms", {
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": JSON.stringify(body)
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(result => {
+        console.log("Success:", result);
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+
+
 
 }
 
@@ -436,11 +466,11 @@ const onPointExitAlarmAreaCallback = (data) => {
 
 class AlarmPopup extends HTMLElement {
 
-    constructor(title) {
+    constructor(title, pointId) {
         super().attachShadow({mode: 'open'});
 
         this.setStyle();
-        this.render(title);
+        this.render(title, pointId);
     }
 
     setStyle() {
@@ -542,7 +572,7 @@ class AlarmPopup extends HTMLElement {
     }
 
 
-    render(title) {
+    render(title = "위치 정보 없음", pointId = "없음") {
 
         const fragments = document.createDocumentFragment();
         const emergencyAlert = document.createElement('DIV');
@@ -572,8 +602,8 @@ class AlarmPopup extends HTMLElement {
                         <td class="alert-value text-red">${title}</td>
                       </tr>
                       <tr>
-                        <th class="alert-label">이벤트 등급</th>
-                        <td class="alert-value text-red">Critical</td>
+                        <th class="alert-label">태그 정보</th>
+                        <td class="alert-value text-red">${pointId}</td>
                       </tr>
                       <tr>
                         <th class="alert-label">발생 일시</th>

@@ -38,7 +38,6 @@ $(function() {
 
 					//일단 강제 전체층 로드 poi는 굳이 로드 하지 않는다.
 					Px.Model.Visible.ShowAll();
-					modelExpand();
 
 					Px.Poi.HideAll();
 					evacRoute.loadRoute();
@@ -653,6 +652,7 @@ $(function() {
 
 			const type = event.currentTarget.href.split('#')[1];
 			const mapCtrlTool = document.querySelector('#mapCtrlTool');
+			const evacRouteTool = document.getElementById('evacRouteTool');
 			const poiEditTool = document.querySelector('#poiEditTool');
 			const topoEditTool = document.querySelector('#topoEditTool');
 
@@ -665,6 +665,7 @@ $(function() {
 				Px.Topology.Data.Clear();
 
 				mapCtrlTool.classList.remove('d-none');
+				evacRouteTool.classList.remove('d-none');
 				poiEditTool.classList.remove('d-none');
 				topoEditTool.classList.add('d-none');
 				categorySel.classList.remove('d-none');
@@ -680,6 +681,7 @@ $(function() {
 				});
 			} else {
 				mapCtrlTool.classList.add('d-none');
+				evacRouteTool.classList.add('d-none');
 				poiEditTool.classList.add('d-none');
 				topoEditTool.classList.remove('d-none');
 				categorySel.classList.add('d-none');
@@ -699,6 +701,7 @@ $(function() {
 
 
 				Px.Poi.HideAll();
+				Px.Topology.Data.SetSize(0.5);
 			}
 		})
 	})
@@ -1193,10 +1196,14 @@ function sidbarDimm (flag) {
 const selectTopoType = async (type) => {
 	Px.Topology.Data.Clear();
 	await $.get("/adm/topology/getTopologyInfo.json", { mapNo, topoType: type }, (res) => {
+		if(res.topologyInfo === null) {
+			return;
+		}
+
 		const { topoJson } = res.topologyInfo;
 		if (topoJson) {
 			Px.Topology.Data.Import(JSON.parse(topoJson));
-			Px.Topology.Data.HideAll();
+			// Px.Topology.Data.HideAll();
 			modelExpand(() => Px.Camera.ExtendView());
 		}
 	});

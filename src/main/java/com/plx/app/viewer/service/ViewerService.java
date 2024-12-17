@@ -1,10 +1,12 @@
 package com.plx.app.viewer.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.plx.app.admin.vo.UsrgrpMapVO;
+import com.plx.app.viewer.vo.AlarmRequestDTO;
+import com.plx.app.viewer.vo.AlarmResponseDTO;
 import com.plx.app.viewer.vo.ViewerPOIInfoVO;
-
 
 /**
  *  @Project KNIS
@@ -38,5 +40,13 @@ public interface ViewerService {
 	public ViewerPOIInfoVO selectPOIInfo(ViewerPOIInfoVO pViewerPOIInfoVO) throws Exception;
 
 	public List<UsrgrpMapVO> selectMapList(UsrgrpMapVO pUsrgrpMapVO) throws Exception;
+
+	public void saveAlarm(AlarmRequestDTO dto) throws Exception;
+
+	public List<AlarmResponseDTO> getAlarms(Map<String, Object> params) throws Exception;
+
+
+
 }
+
 
