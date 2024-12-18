@@ -293,7 +293,9 @@ $(function() {
 		Px.Model.Visible.ShowByArray([floor1, floor2]);
 		Px.Camera.ExtendView();
 		Px.Topology.Data.HideAll();
-		Px.Topology.Data.Show([floor1, floor2]);
+		// Px.Topology.Data.Show([floor1, floor2]);
+		Px.Topology.Data.Show(floor1);
+		Px.Topology.Data.Show(floor2);
 
 		// const baseFloor = floor1 < floor2 ? floor1 : floor2;
 		// const expandOption = {
