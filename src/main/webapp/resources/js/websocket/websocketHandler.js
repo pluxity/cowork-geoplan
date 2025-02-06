@@ -10,6 +10,10 @@ socket.onmessage = (event) => {
     if(data.location && data.id && data.floor) {
         Px.PointMesh.SetPoints(data);
 
+        if(data.floor !== getCurrentFloorGroupNo()) {
+            Px.PointMesh.HidePoint(data.floor);
+        }
+
         renewPointMeshStatusByFloor(getCurrentFloorGroupNo());
 
     }

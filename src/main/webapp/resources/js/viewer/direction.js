@@ -160,7 +160,23 @@ class Direction {
                 if(Px.Topology.Animation.IsPause && Px.Topology.Animation.IsPause()) {  // Resume 버튼일 때
                     Px.Topology.Animation.Resume();
                 } else {
-                    Px.Topology.Animation.Play(speed, height, camRotationSpeed, this.onAnimationChangeFloor, this.onAnimationComplete);
+                    // Px.Topology.Animation.Play({
+                    //     speed,
+                    //     height,
+                    //     camRotationSpeed,
+                    //     this.onChangeFloor,
+                    //     this.onAnimationComplete
+                    // });
+
+                    Px.Topology.Animation.Play({
+                        speed: 5,
+                        cameraHeight: 0.5,
+                        moveToStartTime: 1.0,
+                        readyTime: 2.0,
+                        cameraRotationSpeed: 0.1,
+                        onChangeFloor: this.onChangeFloor,
+                        onComplete: this.onAnimationComplete
+                    });
                 }
             } else {    // 정지 버튼 일 때
                 Px.Topology.Animation.Pause();
@@ -201,7 +217,7 @@ class Direction {
      * 길찾기 애니메이션 시에 층변경 콜백
      * @param floorName
      */
-    onAnimationChangeFloor(floorName) {
+    onChangeFloor(floorName) {
         // 층 변경 될 시..
         toggleFloorBtn(floorName); // viewerEventListener 에 있음
         Px.Model.Visible.HideAll();
@@ -252,7 +268,7 @@ class Direction {
             return;
         }
 
-        pxDirection.onAnimationChangeFloor(startPoi.floorName);
+        pxDirection.onChangeFloor(startPoi.floorName);
         // document.querySelector(`.ul-floor>li[data-floor-group-no='${startPoi.floorName}']`).dispatchEvent(new Event('click'));
         // Px.Poi.ShowByGroup('customPoi');
 

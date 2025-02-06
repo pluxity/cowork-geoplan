@@ -290,6 +290,20 @@ const menuMapClick = () => {
 
     let has = mapWrap.classList.contains('on');
 
+    const targetFloor = Px.Model.GetHierarchy()[0]["name"];
+
+    if(has) {
+        Px.Model.Collapse(() => {})
+    } else {
+        Px.Model.Expand({
+            "duration":10,
+            "interval":10,
+            "name": targetFloor,
+            "onComplete":()=>{}});
+    }
+
+
+
     if(menuWrap.classList.contains('on') || eventWrap.classList.contains('on')){
         menuWrap.classList.remove('on');
         eventWrap.classList.remove('on');
@@ -303,12 +317,7 @@ const menuMapClick = () => {
         const { floorGroupNo } = document.querySelector('.floor_wrap .box .txt').dataset;
         
         if(floorGroupNo === 'all') {
-            camPos.changeCamPos('all');        
-            // Px.Model.Collapse({
-            //     duration:0,
-            //     onComplete: () => {
-            //     }
-            // });
+            camPos.changeCamPos('all');
         }
     }
 }

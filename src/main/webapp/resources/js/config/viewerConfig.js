@@ -196,6 +196,43 @@ const webglCallbacks = {
             document.querySelector('BODY').appendChild(areaBox);
 
         });
+        Px.PointMesh.AddEventListener('onPointClick', (data) => {
+            const { displayName, id } = data;
+
+            document.querySelector('.tag_box')?.remove();
+
+            const areaBox = document.createElement('DIV');
+            areaBox.className = 'tag_box';
+
+            const headerTit = document.createElement('P');
+            headerTit.className = 'header-tit';
+            headerTit.innerHTML = `<span class="txt">${displayName}</span>
+                    <span class="close"></span>`;
+
+            areaBox.appendChild(headerTit);
+            areaBox.querySelector('.close').addEventListener('click', () => {
+                document.querySelector('.tag_box').remove();
+            })
+
+
+            const tagInfo = document.createElement('UL');
+
+            tagInfo.innerHTML +=
+                    `<li>
+                        <span class="tit">이름 : </span>
+                        <span class="txt">${displayName}</span>
+                        <span>&nbsp; / &nbsp;</span>
+                        <span class="tit">태그 : </span>
+                        <span class="txt">${id}</span>
+                    </li>`;
+
+
+
+            areaBox.appendChild(tagInfo);
+
+            document.querySelector('BODY').appendChild(areaBox);
+        });
+
 
 
         fetch(`/adm/evacRoute/getRoute.json?mapNo=${mapNo}`)

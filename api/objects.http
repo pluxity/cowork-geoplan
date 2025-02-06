@@ -3,8 +3,9 @@ Content-Type: application/json
 
 {
     "apikey": "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJhcGkvb2JqZWN0cyIsIm5hbWUiOiJHRU9QTEFOIn0.yHqR2T_jGndU_cs_YvaHjvaqWT6wzYMhrlgXGf80Bf4",
-    "id": 298,
-    "name": "김성훈2",
-    "location": "POINT Z(10.16882335191996 80.795360737817138 1.4)",
-    "floor": 1
+    "id": 301,
+    "name": "김성훈3",
+    "building_code": "BLD_SFMP_0001",
+    "location": "POINT Z(40.16882335191996 80.795360737817138 1.4)",
+    "floor": 2
 }
