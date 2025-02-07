@@ -218,6 +218,10 @@ class Direction {
      * @param floorName
      */
     onChangeFloor(floorName) {
+
+        if(typeof floorName === 'object') {
+            floorName = floorName["to"]?.floorName;
+        }
         // 층 변경 될 시..
         toggleFloorBtn(floorName); // viewerEventListener 에 있음
         Px.Model.Visible.HideAll();
@@ -233,6 +237,13 @@ class Direction {
     onAnimationComplete() {
         // 아마도 뭔가 알림을 줘야하지 않을까 싶긴해요
         // camPos.changeCamPos('current');
+
+        setTimeout(() => {
+            if(!document.querySelector('.drive-3d').classList.contains('d-none')) {
+                findPathToggle();
+                camPos.changeCamPos('current');
+            }
+        }, 5 * 1000);
     }
 
     /**

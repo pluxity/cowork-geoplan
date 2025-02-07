@@ -292,15 +292,15 @@ const menuMapClick = () => {
 
     const targetFloor = Px.Model.GetHierarchy()[0]["name"];
 
-    if(has) {
-        Px.Model.Collapse(() => {})
-    } else {
-        Px.Model.Expand({
-            "duration":10,
-            "interval":10,
-            "name": targetFloor,
-            "onComplete":()=>{}});
-    }
+    // if(has) {
+    //     Px.Model.Collapse(() => {})
+    // } else {
+    //     Px.Model.Expand({
+    //         "duration":10,
+    //         "interval":10,
+    //         "name": targetFloor,
+    //         "onComplete":()=>{}});
+    // }
 
 
 
