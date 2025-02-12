@@ -635,10 +635,17 @@ $(function() {
 		var file = evt.target.files[0];
 		var reader = new FileReader();
 		reader.onload = function(e) {
-			Px.Topology.Data.Import(e.target.result);
+			Px.Topology.Data.Import(JSON.parse(e.target.result));
 			Px.Topology.Data.HideAll();
-			modelExpand();
 			Px.Topology.Data.Show(document.querySelector('#floorNo1').value);
+			modelExpand(() => {
+
+				const floorNo = $('#floorNo1').val();
+				Px.Model.Visible.HideAll();
+				Px.Model.Visible.Show(floorNo);
+
+			});
+
 		};
 		modelCollapse(()=> {
 			reader.readAsText(file);
@@ -855,6 +862,18 @@ function fnUploadRouteFile() {
 	inputFile.click();
 }
 
+const getTimeString = () => {
+	const now = new Date();
+
+	const year = now.getFullYear();
+	const month = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+	const day = String(now.getDate()).padStart(2, '0');
+	const hours = String(now.getHours()).padStart(2, '0'); // 24시간 형식
+	const minutes = String(now.getMinutes()).padStart(2, '0');
+
+	return  `${year}_${month}_${day}_${hours}_${minutes}`;
+}
+
 const fnDownloadRouteFile = () => {
 	modelCollapse(()=> {
 		if(Px.Topology.Data.Export().length === 0) {
@@ -862,7 +881,23 @@ const fnDownloadRouteFile = () => {
 			return;
 		}
 
-		Px.Topology.Data.Download();
+		// 다운로드 버튼 클릭 시 동작
+		const jsonString = JSON.stringify(Px.Topology.Data.Export(), null, 2);
+
+		// Blob 생성: MIME 타입을 application/json으로 설정
+		const blob = new Blob([jsonString], { type: "application/json" });
+
+		// 다운로드를 위한 링크 생성
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(blob);
+		link.download = `topology_${getTimeString()}.json`;
+
+		// 링크 클릭으로 다운로드 시작
+		link.click();
+
+		// 링크 제거 (메모리 정리)
+		URL.revokeObjectURL(link.href);
+
 		setTimeout( ()=> {
 			modelExpand(() => {
 				document.getElementById('floorNo1').dispatchEvent(new Event('change'));
