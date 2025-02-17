@@ -70,7 +70,6 @@ public class FrontViewerController extends BaseController {
 	 */
 	@RequestMapping(value = "/index.do")
 	public String frontViewer(
-//			MapInfoVO pMapInfoVO,
 			Model model,
 			@RequestParam(value = "mapNo", required = true) int mapNo,
 			@RequestParam(value = "floorNo", required = false, defaultValue = "0") int floorNo
@@ -81,11 +80,14 @@ public class FrontViewerController extends BaseController {
 			SystemInfoVO pSystemInfoVO = systemInfoService.selectSystemInfo(); // 시스템
 			model.addAttribute("systemInfoVO", pSystemInfoVO);
 
+			MapInfoVO pMapInfoVO = new MapInfoVO();
+			pMapInfoVO.setMapNo(mapNo);
+
 			// 도면정보
-//			MapInfoVO mapInfoVO = mapInfoService.selectMapInfo(pMapInfoVO);
-//			model.addAttribute("mapNo", mapInfoVO.getMapNo());
-//			model.addAttribute("mapCd", mapInfoVO.getMapCd());
-			model.addAttribute("mapNo", mapNo);
+			MapInfoVO mapInfoVO = mapInfoService.selectMapInfo(pMapInfoVO);
+			model.addAttribute("mapNo", mapInfoVO.getMapNo());
+			model.addAttribute("mapCd", mapInfoVO.getMapCd());
+//			model.addAttribute("mapNo", mapNo);
 
 			AnalyticsVO analyticsVO = new AnalyticsVO();
 			analyticsVO.setMapNo(mapNo);
