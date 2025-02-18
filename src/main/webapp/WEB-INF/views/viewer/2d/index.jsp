@@ -105,6 +105,12 @@
     <c:import url="/WEB-INF/views/cmn/constant.jsp" />
     <!-- 페이지 스크립트 -->
     <script type="text/javascript" src="<c:url value='/resources/js/jquery/jquery.min.js'/>"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        globalThis.USERNAME = `${principal.username}`;
+        /*]]>*/
+    </script>
     <script type="text/javascript" src="<c:url value='/resources/js/viewer/2d/index.js'/>"></script>
 </body>
 </html>

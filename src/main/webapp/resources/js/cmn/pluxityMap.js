@@ -17,15 +17,39 @@ const PluxityMap = function(targetElementId, mapOptions , markerList) {
     let overlay;
     const markers = {};
 
+    const userOptionMap = {
+        "gumihospital": {
+            center: new kakao.maps.LatLng(36.153134716579224, 128.29034018758654),
+        },
+        "andongsisul" : {
+            center: new kakao.maps.LatLng(36.55685886174321, 128.55850425042837),
+        },
+        "gyeongsancrc" : {
+            center: new kakao.maps.LatLng(35.801985769893214, 128.74736133606507),
+        }
+    }
+
     if(typeof targetElementId === 'undefined' || typeof targetElementId !== 'string') console.error('TargetElement Id 설정 필수');
 
     // Default Feature Style
     const defaultOptions = {
-        center: new kakao.maps.LatLng(36.153134716579224, 128.29034018758654),
+        center: null,
         level: 3
     };
-    const options = mapOptions ? mapOptions : defaultOptions;
 
+    let username = USERNAME;
+    switch (username) {
+        case 'gumihospital':
+        case 'andongsisul':
+        case 'gyeongsancrc':
+            defaultOptions.center = userOptionMap[username].center;
+            break;
+        default:
+            console.warn('USERNAME이 없거나 userOptionMap에 없습니다. 기본값 사용.');
+            defaultOptions.center = new kakao.maps.LatLng(36.153134716579224, 128.29034018758654);
+    }
+
+    let options = mapOptions ? mapOptions : defaultOptions;
 
     /**
      * 초기화
