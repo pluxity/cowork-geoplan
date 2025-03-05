@@ -3,7 +3,7 @@ package com.plx.app.itf.service;
 import com.plx.app.itf.controller.WebsocketHandler;
 import com.plx.app.itf.vo.ApiResponseBody;
 import com.plx.app.itf.vo.GeoLocationRequestDTO;
-import com.plx.app.itf.vo.GeoLocationResponseDTO;
+import com.plx.app.itf.vo.InplabRequestDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,7 +63,44 @@ public class GeoLocationService {
                 .message("SUCCESS").
                 build();
 
-        WebsocketHandler.broadcastMessage(dto.toString());
+//        WebsocketHandler.broadcastMessage(dto.toString());
+        WebsocketHandler.broadcastMessage("GEOPLAN", dto.toString());
+
+        return result;
+    }
+
+    public ApiResponseBody postInplabGeoLocation(InplabRequestDTO dto) throws IOException {
+
+        ApiResponseBody result;
+
+        String paramKey = dto.getApikey();
+
+        if(!StringUtils.isEmpty(paramKey) && plxApiKey.equals(paramKey)) {
+            logger.info("API KEY 검증 완료");
+        } else {
+            throw new RuntimeException("API KEY 누락 혹은 맞지 않음");
+        }
+
+        String id = dto.getId();
+        Double lon = dto.getLon();
+        Double lat = dto.getLat();
+        String floor = dto.getFloor();
+        String buildingCode = dto.getBuildingCode();
+
+        if(StringUtils.isAnyBlank(id, buildingCode, floor)) {
+            throw new RuntimeException("필수 파라미터 누락");
+        }
+
+        if(lon.isNaN() || lat.isNaN()) {
+            throw new RuntimeException("좌표 파라미터 이상 (" + lon + ", " + lat + ")");
+        }
+
+        WebsocketHandler.broadcastMessage("INPLAB", dto.toString());
+
+        result = ApiResponseBody.builder()
+                .result(HttpStatus.OK)
+                .message("SUCCESS").
+                build();
 
         return result;
     }

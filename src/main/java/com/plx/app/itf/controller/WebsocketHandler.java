@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.CloseStatus;
@@ -75,6 +76,23 @@ public class WebsocketHandler extends TextWebSocketHandler {
         TextMessage textMessage = new TextMessage(message);
 
         for(final WebSocketSession session : sessionList) {
+            session.sendMessage(textMessage);
+        }
+    }
+
+    public static void broadcastMessage(String payload, String message) throws IOException {
+        // JSON 형태의 메시지 객체 생성
+        Map<String, String> data = new HashMap<>();
+        data.put("payload", payload);
+        data.put("message", message);
+
+        // ObjectMapper를 통해 JSON 문자열로 변환
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonMessage = mapper.writeValueAsString(data);
+
+        TextMessage textMessage = new TextMessage(jsonMessage);
+
+        for (WebSocketSession session : sessionList) {
             session.sendMessage(textMessage);
         }
     }

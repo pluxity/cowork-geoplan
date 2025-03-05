@@ -3,7 +3,7 @@ package com.plx.app.itf.controller;
 import com.plx.app.itf.service.GeoLocationService;
 import com.plx.app.itf.vo.ApiResponseBody;
 import com.plx.app.itf.vo.GeoLocationRequestDTO;
-import com.plx.app.itf.vo.GeoLocationResponseDTO;
+import com.plx.app.itf.vo.InplabRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,11 +48,34 @@ public class GeoLocationController {
         return ResponseEntity.ok().body(result);
     }
 
+    @PostMapping(value = "/api/inplab/objects")
+    public ResponseEntity<ApiResponseBody> postInplabObjectInfo(
+            @RequestBody InplabRequestDTO dto
+    ) {
+        ApiResponseBody result;
+        try {
+            result = geoLocationService.postInplabGeoLocation(dto);
+        } catch (RuntimeException e) {
+            result = ApiResponseBody.builder()
+                    .result(HttpStatus.BAD_REQUEST)
+                    .message(e.getMessage())
+                    .build();
+        } catch (IOException ie) {
+            logger.error(ie.getMessage());
+
+            result = ApiResponseBody.builder()
+                    .result(HttpStatus.OK)
+                    .message("SUCCESS")
+                    .build();
+        }
+
+        return ResponseEntity.ok().body(result);
+    }
+
     @GetMapping(value = "/api/objects")
     public ResponseEntity<String> getObjectInfo() {
         String result = geoLocationService.getLocations();
         return ResponseEntity.ok().body(result);
     }
-
 
 }
