@@ -247,6 +247,15 @@ const webglCallbacks = {
                 renewPointMeshStatusByFloor();
             });
 
+        if(mapCd === 'BLD_SFMP_0003') {
+            Px.PointMesh.SetHeightTable({
+                '-1': 0.63,
+                '1': 4.93,
+                '2': 8.98,
+                '3': 12.85,
+            });
+        }
+
     },
     changePoiCategory1: (poiCategory1Nos) => {
     },
@@ -440,6 +449,7 @@ const renewPointMeshStatusByFloor = (floorGroupNo = 'all') => {
     document.getElementById('totalCount').innerText = `${pointMeshStatus["floor"].total.length}` ?? "0";
     document.getElementById('currentFloorCount').innerText = pointMeshStatus["floor"][`${floorGroupNo !== 'all' ? floorGroupNo : 'total'}`]?.length ?? "0";
 
+    Px.PointMesh.ShowPoint(floorGroupNo);
 }
 
 const getCurrentFloorGroupNo = () => {

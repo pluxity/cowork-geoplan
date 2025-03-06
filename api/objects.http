@@ -1,4 +1,4 @@
-POST http://localhost:8080/api/objects
+POST http://{{domain}}/api/objects
 Content-Type: application/json
 
 {
@@ -11,15 +11,15 @@ Content-Type: application/json
 }
 
 ### INPLAB
-POST http://localhost:8080/api/inplab/objects
+POST http://{{domain}}/api/inplab/objects
 Content-Type: application/json
 
 {
-"apikey": "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJhcGkvb2JqZWN0cyIsIm5hbWUiOiJHRU9QTEFOIn0.yHqR2T_jGndU_cs_YvaHjvaqWT6wzYMhrlgXGf80Bf4",
-"id": 301,
-"name": "김성훈1",
-"building_code": "BLD_SFMP_0003",
-"lon": 35.802040,
-"lat": 128.747023,
-"floor": "2"
+    "apikey": "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJhcGkvb2JqZWN0cyIsIm5hbWUiOiJHRU9QTEFOIn0.yHqR2T_jGndU_cs_YvaHjvaqWT6wzYMhrlgXGf80Bf4",
+    "id": 304,
+    "name": "김성훈1",
+    "building_code": "BLD_SFMP_0003",
+    "lon": 35.802050,
+    "lat": 128.747368,
+    "floor": "2"
 }
